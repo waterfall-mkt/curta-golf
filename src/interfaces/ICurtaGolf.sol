@@ -56,7 +56,7 @@ interface ICurtaGolf {
     /// @param course The address of the course.
     /// @param gasUsed The current leading solution's gas usage. If there have
     /// been no solutions submitted, `gasUsed` is 0 by default.
-    struct Course {
+    struct CourseData {
         ICourse course;
         uint32 gasUsed;
     }
