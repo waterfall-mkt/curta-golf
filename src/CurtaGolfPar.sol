@@ -50,14 +50,14 @@ contract CurtaGolfPar is CurtaGolfParERC721 {
 
         // Compute token ID and fetch token data.
         uint256 tokenId = (_courseId << 160) | uint256(uint160(_to));
-        CurtaGolfParERC721.TokenData memory tokenData = getTokenData[tokenId];
+        CurtaGolfParERC721.TokenData memory tokenData = _tokenData[tokenId];
 
         // Mint a new token if the token does not exist or update the gas used
         // on the token if the new gas used is less than the current gas used.
         if (tokenData.owner == address(0)) {
             _mint({ _to: _to, _id: tokenId, _gasUsed: _gasUsed });
         } else if (tokenData.gasUsed > _gasUsed) {
-            getTokenData[tokenId].gasUsed = _gasUsed;
+            _tokenData[tokenId].gasUsed = _gasUsed;
         }
     }
 
@@ -66,7 +66,7 @@ contract CurtaGolfPar is CurtaGolfParERC721 {
     // -------------------------------------------------------------------------
 
     /// @inheritdoc CurtaGolfParERC721
-    function tokenURI(uint256 _tokenId) external view override returns (string memory) {
+    function tokenURI(uint256 _id) external view override returns (string memory) {
         return "TODO";
     }
 }

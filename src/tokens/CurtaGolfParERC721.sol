@@ -49,9 +49,9 @@ abstract contract CurtaGolfParERC721 is ERC721TokenReceiver {
 
     mapping(address => uint256) internal _balanceOf;
 
-    mapping(uint256 => address) public getApproved;
+    mapping(uint256 => TokenData) internal _tokenData;
 
-    mapping(uint256 => TokenData) public getTokenData;
+    mapping(uint256 => address) public getApproved;
 
     mapping(address => mapping(address => bool)) public isApprovedForAll;
 
@@ -83,7 +83,7 @@ abstract contract CurtaGolfParERC721 is ERC721TokenReceiver {
             ++_balanceOf[_to];
         }
 
-        getTokenData[_id] = TokenData({ owner: _to, gasUsed: _gasUsed });
+        _tokenData[_id] = TokenData({ owner: _to, gasUsed: _gasUsed });
 
         // Emit event.
         emit Transfer(address(0), _to, _id);
@@ -94,7 +94,7 @@ abstract contract CurtaGolfParERC721 is ERC721TokenReceiver {
     // -------------------------------------------------------------------------
 
     function approve(address _spender, uint256 _id) external {
-        address owner = getTokenData[_id].owner;
+        address owner = _tokenData[_id].owner;
 
         // Revert if the sender is not the owner, or the owner has not approved
         // the sender to operate the token.
@@ -122,12 +122,12 @@ abstract contract CurtaGolfParERC721 is ERC721TokenReceiver {
     }
 
     function ownerOf(uint256 _id) public view returns (address owner) {
-        require((owner = getTokenData[_id].owner) != address(0), "NOT_MINTED");
+        require((owner = _tokenData[_id].owner) != address(0), "NOT_MINTED");
     }
 
     function transferFrom(address _from, address _to, uint256 _id) public virtual {
         // Revert if the token is not being transferred from the current owner.
-        require(_from == getTokenData[_id].owner, "WRONG_FROM");
+        require(_from == _tokenData[_id].owner, "WRONG_FROM");
 
         // Revert if the recipient is the zero address.
         require(_to != address(0), "INVALID_RECIPIENT");
@@ -149,7 +149,7 @@ abstract contract CurtaGolfParERC721 is ERC721TokenReceiver {
         }
 
         // Set new owner.
-        getTokenData[_id].owner = _to;
+        _tokenData[_id].owner = _to;
 
         // Clear previous approval data for the token.
         delete getApproved[_id];
@@ -187,9 +187,9 @@ abstract contract CurtaGolfParERC721 is ERC721TokenReceiver {
     // -------------------------------------------------------------------------
 
     /// @notice A distinct Uniform Resource Identifier (URI) for a given asset.
-    /// @param _tokenId The token ID.
+    /// @param _id The token ID.
     /// @return URI for the token.
-    function tokenURI(uint256 _tokenId) external view virtual returns (string memory);
+    function tokenURI(uint256 _id) external view virtual returns (string memory);
 
     // -------------------------------------------------------------------------
     // ERC165
@@ -199,5 +199,17 @@ abstract contract CurtaGolfParERC721 is ERC721TokenReceiver {
         return _interfaceId == 0x01FFC9A7 // ERC165 Interface ID for ERC165
             || _interfaceId == 0x80AC58CD // ERC165 Interface ID for ERC721
             || _interfaceId == 0x5B5E139F; // ERC165 Interface ID for ERC721Metadata
+    }
+
+    // -------------------------------------------------------------------------
+    // Read functions
+    // -------------------------------------------------------------------------
+
+    /// @notice Returns the token data for the token with ID `_id` if the token
+    /// exists.
+    /// @param _id The ID of the token.
+    /// @return tokenData The token data.
+    function getTokenData(uint256 _id) external view returns (TokenData memory tokenData) {
+        require((tokenData = _tokenData[_id]).owner != address(0), "NOT_MINTED");
     }
 }
