@@ -97,7 +97,8 @@ contract CurtaGolf is ICurtaGolf, CurtaGolfERC721, Owned {
             uint32 curCourseId = ++courseId;
 
             // Add the course.
-            getCourse[curCourseId] = CourseData({ course: _course, gasUsed: 0 });
+            getCourse[curCourseId] =
+                CourseData({ course: _course, gasUsed: 0, solutionCount: 0, kingCount: 0 });
 
             // Emit event.
             emit AddCourse(curCourseId, ICourse(msg.sender));
@@ -139,7 +140,7 @@ contract CurtaGolf is ICurtaGolf, CurtaGolfERC721, Owned {
         uint32 gasUsed = courseData.course.run(target, block.prevrandao);
         if (courseData.gasUsed == 0 || gasUsed < courseData.gasUsed) {
             // Update course's leading score.
-            getCourse[_courseId].gasUsed = gasUsed;
+            courseData.gasUsed = gasUsed;
 
             // Mint or force transfer NFT to `_recipient`.
             if (_ownerOf[_courseId] == address(0)) {
@@ -148,9 +149,22 @@ contract CurtaGolf is ICurtaGolf, CurtaGolfERC721, Owned {
                 _forceTransfer(_recipient, _courseId);
             }
 
+            // Increment King count.
+            unchecked {
+                courseData.kingCount++;
+            }
+
             // Emit event.
             emit UpdateKing(_courseId, _recipient, gasUsed);
         }
+
+        // Increment solution count.
+        unchecked {
+            courseData.solutionCount++;
+        }
+
+        // Update storage.
+        getCourse[_courseId] = courseData;
 
         // Upmint a token to `_recipient` in the Curta Golf Par contract.
         curtaGolfPar.upmint(_recipient, _courseId, gasUsed);

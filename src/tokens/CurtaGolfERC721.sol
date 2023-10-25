@@ -7,7 +7,7 @@ import { ERC721 } from "solmate/tokens/ERC721.sol";
 /// @author fiveoutofnine
 /// @notice An implementation of the ERC-721 standard to allow Curta Golf to
 /// forcibly transfer tokens. It will only be used when a course receives a new
-/// king (i.e. lowers the previous leading solution's gas usage).
+/// King (i.e. lowers the previous leading solution's gas usage).
 abstract contract CurtaGolfERC721 is ERC721 {
     // -------------------------------------------------------------------------
     // Constructor + `_forceTransfer` function
@@ -20,7 +20,7 @@ abstract contract CurtaGolfERC721 is ERC721 {
     /// @notice Forcibly transfers a token to `_to`, ignoring prior ownership
     /// and approvals.
     /// @dev This function must only be called by the Curta Golf contract when a
-    /// course receives a new king (i.e. lowers the previous leading solution's
+    /// course receives a new King (i.e. lowers the previous leading solution's
     /// gas usage).
     /// @param _to The address to transfer the token to.
     /// @param _id The ID of the token to transfer.

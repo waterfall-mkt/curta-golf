@@ -57,9 +57,13 @@ interface ICurtaGolf {
     /// @param course The address of the course.
     /// @param gasUsed The current leading solution's gas usage. If there have
     /// been no solutions submitted, `gasUsed` is 0 by default.
+    /// @param solutionCount The number of successful solutions submitted.
+    /// @param kingCount The number of times the course has had a new King.
     struct CourseData {
         ICourse course;
         uint32 gasUsed;
+        uint32 solutionCount;
+        uint32 kingCount;
     }
 
     // -------------------------------------------------------------------------
@@ -89,7 +93,7 @@ interface ICurtaGolf {
     /// @param purityChecker The address of the new purity checker.
     event SetPurityChecker(IPurityChecker indexed purityChecker);
 
-    /// @notice Emitted when a course gets a new king.
+    /// @notice Emitted when a course gets a new King.
     /// @param courseId The ID of the course.
     /// @param recipient The address of the recipient.
     /// @param gasUsed The amount of gas used.
@@ -123,7 +127,12 @@ interface ICurtaGolf {
     function getCommit(bytes32 _key) external view returns (address player, uint96 blockNumber);
 
     /// @param _id The ID of the course.
-    function getCourse(uint32 _id) external view returns (ICourse course, uint32 gasUsed);
+    /// @param solutionCount The number of successful solutions submitted.
+    /// @param kingCount The number of times the course has had a new King.
+    function getCourse(uint32 _id)
+        external
+        view
+        returns (ICourse course, uint32 gasUsed, uint32 solutionCount, uint32 kingCount);
 
     // -------------------------------------------------------------------------
     // Functions
