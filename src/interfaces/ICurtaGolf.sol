@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.21;
 
+import { CurtaGolfPar } from "../CurtaGolfPar.sol";
 import { ICourse } from "./ICourse.sol";
 import { IPurityChecker } from "./IPurityChecker.sol";
 
@@ -97,6 +98,9 @@ interface ICurtaGolf {
     // -------------------------------------------------------------------------
     // Immutable storage
     // -------------------------------------------------------------------------
+
+    /// @notice The Curta Golf Par contract.
+    function curtaGolfPar() external view returns (CurtaGolfPar);
 
     /// @return The address of the renderer used to render tokens' metadata
     /// returned by {CurtaGolf.tokenURI}.
