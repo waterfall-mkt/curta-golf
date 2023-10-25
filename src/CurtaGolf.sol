@@ -128,6 +128,10 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
     // Helper functions
     // -------------------------------------------------------------------------
 
+    /// @notice Submits a solution by revealing a previously committed solution.
+    /// @param _courseId The ID of the course.
+    /// @param _solution The bytecode of the solution.
+    /// @param _recipient The address of the recipient.
     function _submit(uint32 _courseId, bytes memory _solution, address _recipient) internal {
         CourseData memory courseData = getCourse[_courseId];
 
