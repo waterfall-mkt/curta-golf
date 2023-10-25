@@ -8,12 +8,7 @@ import { IPurityChecker } from "./IPurityChecker.sol";
 /// @title The interface for Curta Golf
 /// @notice Curta Golf is a king-of-the-hill style gas golfing protocol, where
 /// the goal is for players to submit solutions to ``courses,'' or challenges,
-/// to use the least gas possible. If a player's solution becomes the leading
-/// solution (i.e. the least gas used) for a course, they become the ``King'' of
-/// that course, and an NFT with the same ID is transferred to them. Additional
-/// ``Par'' NFTs are minted to players who submit valid solutions even if they
-/// are not the leading solution (see {Par}; note: max 1 Par NFT per (course,
-/// solver) pair).
+/// to use the least gas possible.
 interface ICurtaGolf {
     // -------------------------------------------------------------------------
     // Errors
