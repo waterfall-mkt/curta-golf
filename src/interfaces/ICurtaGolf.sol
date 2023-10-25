@@ -80,9 +80,9 @@ interface ICurtaGolf {
     /// @notice Emitted when a valid submission is made.
     /// @param courseId The ID of the course.
     /// @param recipient The address of the recipient.
-    /// @param solution The address of the deployed solution.
+    /// @param target The address of the deployed solution.
     event SubmitSolution(
-        uint32 indexed courseId, address indexed recipient, address indexed solution
+        uint32 indexed courseId, address indexed recipient, address indexed target
     );
 
     /// @notice Emitted when a new purity checker is set.

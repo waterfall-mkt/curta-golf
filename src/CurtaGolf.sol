@@ -135,7 +135,7 @@ contract CurtaGolf is ICurtaGolf, CurtaGolfERC721, Owned {
             target := create(0, add(_solution, 0x20), mload(_solution))
         }
 
-        // Run user solution and mint NFT if it beats the leading score.
+        // Run solution and mint NFT if it beats the leading score.
         uint32 gasUsed = courseData.course.run(target, block.prevrandao);
         if (courseData.gasUsed == 0 || gasUsed < courseData.gasUsed) {
             // Update course's leading score.
