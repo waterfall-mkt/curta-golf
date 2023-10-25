@@ -4,6 +4,7 @@ pragma solidity ^0.8.21;
 import { Owned } from "solmate/auth/Owned.sol";
 
 import { CurtaGolfPar } from "./CurtaGolfPar.sol";
+import { ICourse } from "./interfaces/ICourse.sol";
 import { ICurtaGolf } from "./interfaces/ICurtaGolf.sol";
 import { IPurityChecker } from "./interfaces/IPurityChecker.sol";
 import { CurtaGolfERC721 } from "./tokens/CurtaGolfERC721.sol";
@@ -48,6 +49,38 @@ contract CurtaGolf is ICurtaGolf, CurtaGolfERC721, Owned {
     {
         curtaGolfPar = _curtaGolfPar;
         renderer = _renderer;
+    }
+
+    // -------------------------------------------------------------------------
+    // `owner`-only functions
+    // -------------------------------------------------------------------------
+
+    /// @inheritdoc ICurtaGolf
+    function addCourse(ICourse _course) external onlyOwner {
+        // Revert if `_course` is the zero address.
+        if (address(_course) == address(0)) revert AddressIsZeroAddress();
+
+        unchecked {
+            uint32 curCourseId = ++courseId;
+
+            // Add the course.
+            getCourse[curCourseId] = CourseData({ course: _course, gasUsed: 0 });
+
+            // Emit event.
+            emit AddCourse(curCourseId, ICourse(msg.sender));
+        }
+    }
+
+    /// @inheritdoc ICurtaGolf
+    function setPurityChecker(IPurityChecker _purityChecker) external onlyOwner {
+        // Revert if `_purityChecker` is the zero address.
+        if (address(_purityChecker) == address(0)) revert AddressIsZeroAddress();
+
+        // Set purity checker.
+        purityChecker = _purityChecker;
+
+        // Emit event.
+        emit SetPurityChecker(_purityChecker);
     }
 
     // -------------------------------------------------------------------------
