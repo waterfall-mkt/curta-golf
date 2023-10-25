@@ -24,9 +24,16 @@ contract CurtaGolf is ICurtaGolf, CurtaGolfERC721, Owned {
     // -------------------------------------------------------------------------
 
     /// @inheritdoc ICurtaGolf
+    uint32 public override courseId;
+
     /// @inheritdoc ICurtaGolf
+    IPurityChecker public override purityChecker;
+
     /// @inheritdoc ICurtaGolf
+    mapping(bytes32 key => Commit commit) public override getCommit;
+
     /// @inheritdoc ICurtaGolf
+    mapping(uint32 courseId => CourseData courseData) public override getCourse;
 
     // -------------------------------------------------------------------------
     // Constructor
