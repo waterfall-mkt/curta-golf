@@ -10,7 +10,7 @@ import { ERC721 } from "solmate/tokens/ERC721.sol";
 /// king (i.e. lowers the previous leading solution's gas usage).
 abstract contract CurtaGolfERC721 is ERC721 {
     // -------------------------------------------------------------------------
-    // Constructor + functions
+    // Constructor + `_forceTransfer` function
     // -------------------------------------------------------------------------
 
     /// @param _name The name of the contract.
@@ -47,26 +47,6 @@ abstract contract CurtaGolfERC721 is ERC721 {
 
         // Emit event.
         emit Transfer(from, _to, _id);
-    }
-
-    /// @notice Mints a King token to `_to`.
-    /// @dev This function can only called by {CurtaGolf}, so it makes a few
-    /// assumptions. For example, the token is never minted to the zero address.
-    /// @param _to The address to mint the token to.
-    /// @param _id The ID of the token.
-    function _mint(address _to, uint256 _id) internal {
-        // Update balances.
-        unchecked {
-            // Will never overflow because the recipient's balance can't
-            // realistically overflow.
-            _balanceOf[_to]++;
-        }
-
-        // Set new owner
-        _ownerOf[_id] = _to;
-
-        // Emit event.
-        emit Transfer(address(0), _to, _id);
     }
 
     // -------------------------------------------------------------------------

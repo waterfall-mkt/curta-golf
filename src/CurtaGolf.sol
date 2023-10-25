@@ -52,6 +52,58 @@ contract CurtaGolf is ICurtaGolf, CurtaGolfERC721, Owned {
     }
 
     // -------------------------------------------------------------------------
+    // Player functions
+    // -------------------------------------------------------------------------
+
+    /// @inheritdoc ICurtaGolf
+    function commit(bytes32 _key) external {
+        // Revert if the code has already been committed.
+        if (getCommit[_key].player != address(0)) revert KeyAlreadyCommitted(_key);
+
+        // Commit the key.
+        getCommit[_key] = Commit({ player: msg.sender, blockNumber: uint96(block.number) });
+    }
+
+    /// @inheritdoc ICurtaGolf
+    function submit(uint32 _courseId, bytes memory _solution, address _recipient, uint256 _salt)
+        external
+    {
+        CourseData memory courseData = getCourse[_courseId];
+
+        // Revert if the course does not exist.
+        if (address(courseData.course) == address(0)) revert CourseDoesNotExist(_courseId);
+
+        // Compute key.
+        bytes32 key = keccak256(abi.encode(msg.sender, _solution, _salt));
+
+        // Revert if the corresponding commit was never made.
+        if (getCommit[key].player == address(0)) revert KeyNotCommitted(key);
+
+        // Revert if the solution contains invalid opcodes.
+        if (!purityChecker.check(_solution)) revert PollutedSolution();
+
+        // Deploy the solution.
+        address target;
+        assembly {
+            target := create(0, add(_solution, 0x20), mload(_solution))
+        }
+
+        // Run user solution and mint NFT if it beats the leading score.
+        uint32 gasUsed = courseData.course.run(target, block.prevrandao);
+        if (courseData.gasUsed == 0 || gasUsed < courseData.gasUsed) {
+            // Update course's leading score.
+            getCourse[_courseId].gasUsed = gasUsed;
+
+            // TODO: Force transfer NFT to `_recipient` and emit event.
+        }
+    }
+
+    /// @inheritdoc ICurtaGolf
+    function submitDirectly(uint32 _courseId, bytes memory _solution, address _recipient)
+        external
+    { }
+
+    // -------------------------------------------------------------------------
     // `owner`-only functions
     // -------------------------------------------------------------------------
 
@@ -88,7 +140,7 @@ contract CurtaGolf is ICurtaGolf, CurtaGolfERC721, Owned {
     // -------------------------------------------------------------------------
 
     /// @inheritdoc CurtaGolfERC721
-    function tokenURI(uint256 _id) external view override returns (string memory) {
+    function tokenURI(uint256 _id) public view override returns (string memory) {
         return "TODO";
     }
 }
