@@ -3,19 +3,19 @@ pragma solidity ^0.8.21;
 
 import { Owned } from "solmate/auth/Owned.sol";
 
-import { CurtaGolfPar } from "./CurtaGolfPar.sol";
+import { Par } from "./Par.sol";
 import { ICourse } from "./interfaces/ICourse.sol";
 import { ICurtaGolf } from "./interfaces/ICurtaGolf.sol";
 import { IPurityChecker } from "./interfaces/IPurityChecker.sol";
-import { CurtaGolfERC721 } from "./tokens/CurtaGolfERC721.sol";
+import { KingERC721 } from "./tokens/KingERC721.sol";
 
-contract CurtaGolf is ICurtaGolf, CurtaGolfERC721, Owned {
+contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
     // -------------------------------------------------------------------------
     // Immutable storage
     // -------------------------------------------------------------------------
 
     /// @inheritdoc ICurtaGolf
-    CurtaGolfPar public immutable override curtaGolfPar;
+    Par public immutable override par;
 
     /// @inheritdoc ICurtaGolf
     address public immutable override renderer;
@@ -40,14 +40,11 @@ contract CurtaGolf is ICurtaGolf, CurtaGolfERC721, Owned {
     // Constructor
     // -------------------------------------------------------------------------
 
-    /// @param _curtaGolfPar The Curta Golf Par contract.
+    /// @param _par The Par contract.
     /// @param _renderer The address of the renderer used to render tokens'
     /// metadata.
-    constructor(CurtaGolfPar _curtaGolfPar, address _renderer)
-        CurtaGolfERC721("Curta Golf", "KING")
-        Owned(msg.sender)
-    {
-        curtaGolfPar = _curtaGolfPar;
+    constructor(Par _par, address _renderer) KingERC721("Curta Golf", "KING") Owned(msg.sender) {
+        par = _par;
         renderer = _renderer;
     }
 
@@ -166,8 +163,8 @@ contract CurtaGolf is ICurtaGolf, CurtaGolfERC721, Owned {
         // Update storage.
         getCourse[_courseId] = courseData;
 
-        // Upmint a token to `_recipient` in the Curta Golf Par contract.
-        curtaGolfPar.upmint(_recipient, _courseId, gasUsed);
+        // Upmint a token to `_recipient` in the Par contract.
+        par.upmint(_recipient, _courseId, gasUsed);
 
         // Emit event.
         emit SubmitSolution(_courseId, _recipient, target);
@@ -177,7 +174,7 @@ contract CurtaGolf is ICurtaGolf, CurtaGolfERC721, Owned {
     // ERC721Metadata
     // -------------------------------------------------------------------------
 
-    /// @inheritdoc CurtaGolfERC721
+    /// @inheritdoc KingERC721
     function tokenURI(uint256 _id) public view override returns (string memory) {
         return "TODO";
     }

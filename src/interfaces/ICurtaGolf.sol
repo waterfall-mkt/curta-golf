@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.21;
 
-import { CurtaGolfPar } from "../CurtaGolfPar.sol";
+import { Par } from "../Par.sol";
 import { ICourse } from "./ICourse.sol";
 import { IPurityChecker } from "./IPurityChecker.sol";
 
@@ -12,8 +12,8 @@ import { IPurityChecker } from "./IPurityChecker.sol";
 /// solution (i.e. the least gas used) for a course, they become the ``King'' of
 /// that course, and an NFT with the same ID is transferred to them. Additional
 /// ``Par'' NFTs are minted to players who submit valid solutions even if they
-/// are not the leading solution (see {CurtaGolfPar}; note: max 1 Par NFT per
-/// (course, solver) pair).
+/// are not the leading solution (see {Par}; note: max 1 Par NFT per (course,
+/// solver) pair).
 interface ICurtaGolf {
     // -------------------------------------------------------------------------
     // Errors
@@ -103,8 +103,8 @@ interface ICurtaGolf {
     // Immutable storage
     // -------------------------------------------------------------------------
 
-    /// @notice The Curta Golf Par contract.
-    function curtaGolfPar() external view returns (CurtaGolfPar);
+    /// @notice The Par contract.
+    function par() external view returns (Par);
 
     /// @return The address of the renderer used to render tokens' metadata
     /// returned by {CurtaGolf.tokenURI}.

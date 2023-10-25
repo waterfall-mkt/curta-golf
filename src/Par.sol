@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.21;
 
-import { CurtaGolfParERC721 } from "./tokens/CurtaGolfParERC721.sol";
+import { ParERC721 } from "./tokens/ParERC721.sol";
 
 /// @title The Curta Golf ``Par'' NFT contract
 /// @author fiveoutofnine
@@ -13,7 +13,7 @@ import { CurtaGolfParERC721 } from "./tokens/CurtaGolfParERC721.sol";
 /// as `(_courseId << 160) | _recipient`. Upon a successful submission, if the
 /// solver already has a token for the course, the token is updated with the
 /// new gas used if the new gas used is less than the old gas used.
-contract CurtaGolfPar is CurtaGolfParERC721 {
+contract Par is ParERC721 {
     // -------------------------------------------------------------------------
     // Errors
     // -------------------------------------------------------------------------
@@ -33,7 +33,7 @@ contract CurtaGolfPar is CurtaGolfParERC721 {
     // -------------------------------------------------------------------------
 
     /// @param _curtaGolf The Curta Golf contract.
-    constructor(address _curtaGolf) CurtaGolfParERC721("Curta Golf Par", "PAR") {
+    constructor(address _curtaGolf) ParERC721("Par", "PAR") {
         curtaGolf = _curtaGolf;
     }
 
@@ -50,7 +50,7 @@ contract CurtaGolfPar is CurtaGolfParERC721 {
 
         // Compute token ID and fetch token data.
         uint256 tokenId = (_courseId << 160) | uint256(uint160(_to));
-        CurtaGolfParERC721.TokenData memory tokenData = _tokenData[tokenId];
+        ParERC721.TokenData memory tokenData = _tokenData[tokenId];
 
         // Mint a new token if the token does not exist or update the gas used
         // on the token if the new gas used is less than the current gas used.
@@ -65,7 +65,7 @@ contract CurtaGolfPar is CurtaGolfParERC721 {
     // ERC721Metadata
     // -------------------------------------------------------------------------
 
-    /// @inheritdoc CurtaGolfParERC721
+    /// @inheritdoc ParERC721
     function tokenURI(uint256 _id) external view override returns (string memory) {
         return "TODO";
     }

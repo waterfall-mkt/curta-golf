@@ -10,7 +10,7 @@ import { ERC721TokenReceiver } from "solmate/tokens/ERC721.sol";
 /// track of players' leading solutions (i.e. least gas used) for each course.
 /// The mint function packs the gas used and the player's address into a single
 /// 32-byte slot.
-abstract contract CurtaGolfParERC721 is ERC721TokenReceiver {
+abstract contract ParERC721 is ERC721TokenReceiver {
     // -------------------------------------------------------------------------
     // Events
     // -------------------------------------------------------------------------
