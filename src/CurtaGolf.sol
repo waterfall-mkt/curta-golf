@@ -68,40 +68,21 @@ contract CurtaGolf is ICurtaGolf, CurtaGolfERC721, Owned {
     function submit(uint32 _courseId, bytes memory _solution, address _recipient, uint256 _salt)
         external
     {
-        CourseData memory courseData = getCourse[_courseId];
-
-        // Revert if the course does not exist.
-        if (address(courseData.course) == address(0)) revert CourseDoesNotExist(_courseId);
-
         // Compute key.
         bytes32 key = keccak256(abi.encode(msg.sender, _solution, _salt));
 
         // Revert if the corresponding commit was never made.
         if (getCommit[key].player == address(0)) revert KeyNotCommitted(key);
 
-        // Revert if the solution contains invalid opcodes.
-        if (!purityChecker.check(_solution)) revert PollutedSolution();
-
-        // Deploy the solution.
-        address target;
-        assembly {
-            target := create(0, add(_solution, 0x20), mload(_solution))
-        }
-
-        // Run user solution and mint NFT if it beats the leading score.
-        uint32 gasUsed = courseData.course.run(target, block.prevrandao);
-        if (courseData.gasUsed == 0 || gasUsed < courseData.gasUsed) {
-            // Update course's leading score.
-            getCourse[_courseId].gasUsed = gasUsed;
-
-            // TODO: Force transfer NFT to `_recipient` and emit event.
-        }
+        _submit(_courseId, _solution, _recipient);
     }
 
     /// @inheritdoc ICurtaGolf
     function submitDirectly(uint32 _courseId, bytes memory _solution, address _recipient)
         external
-    { }
+    {
+        _submit(_courseId, _solution, _recipient);
+    }
 
     // -------------------------------------------------------------------------
     // `owner`-only functions
@@ -133,6 +114,49 @@ contract CurtaGolf is ICurtaGolf, CurtaGolfERC721, Owned {
 
         // Emit event.
         emit SetPurityChecker(_purityChecker);
+    }
+
+    // -------------------------------------------------------------------------
+    // Helper functions
+    // -------------------------------------------------------------------------
+
+    function _submit(uint32 _courseId, bytes memory _solution, address _recipient) internal {
+        CourseData memory courseData = getCourse[_courseId];
+
+        // Revert if the course does not exist.
+        if (address(courseData.course) == address(0)) revert CourseDoesNotExist(_courseId);
+
+        // Revert if the solution contains invalid opcodes.
+        if (!purityChecker.check(_solution)) revert PollutedSolution();
+
+        // Deploy the solution.
+        address target;
+        assembly {
+            target := create(0, add(_solution, 0x20), mload(_solution))
+        }
+
+        // Run user solution and mint NFT if it beats the leading score.
+        uint32 gasUsed = courseData.course.run(target, block.prevrandao);
+        if (courseData.gasUsed == 0 || gasUsed < courseData.gasUsed) {
+            // Update course's leading score.
+            getCourse[_courseId].gasUsed = gasUsed;
+
+            // Mint or force transfer NFT to `_recipient`.
+            if (_ownerOf[_courseId] == address(0)) {
+                _mint(_recipient, _courseId);
+            } else {
+                _forceTransfer(_recipient, _courseId);
+            }
+
+            // Emit event.
+            emit UpdateKing(_courseId, _recipient, gasUsed);
+        }
+
+        // Upmint a token to `_recipient` in the Curta Golf Par contract.
+        curtaGolfPar.upmint(_recipient, _courseId, gasUsed);
+
+        // Emit event.
+        emit SubmitSolution(_courseId, _recipient, target);
     }
 
     // -------------------------------------------------------------------------
