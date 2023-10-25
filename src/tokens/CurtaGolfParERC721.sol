@@ -69,20 +69,21 @@ abstract contract CurtaGolfParERC721 is ERC721TokenReceiver {
     /// @notice Mints a Par token to `_to`.
     /// @dev This function can only called by {CurtaGolf}, so it makes a few
     /// assumptions. For example, the ID of the token is always in the form
-    /// `(courseId << 160) | _to`.
+    /// `(courseId << 160) | _to`, and the token is never minted to the zero
+    /// address.
     /// @param _to The address to mint the token to.
     /// @param _id The ID of the token.
     /// @param _gasUsed The amount of gas used on the owner's leading solution
     /// for the corresponding course.
     function _mint(address _to, uint256 _id, uint32 _gasUsed) internal {
-        // We do not check whether the `_to` is `address(0)` or that the token
-        // was previously minted because {CurtaGolf} ensures these conditions
-        // are never true.
-
+        // Update balances.
         unchecked {
-            ++_balanceOf[_to];
+            // Will never overflow because the recipient's balance can't
+            // realistically overflow.
+            _balanceOf[_to]++;
         }
 
+        // Set new owner
         _tokenData[_id] = TokenData({ owner: _to, gasUsed: _gasUsed });
 
         // Emit event.
@@ -144,7 +145,8 @@ abstract contract CurtaGolfParERC721 is ERC721TokenReceiver {
         unchecked {
             // Will never underflow because of the token ownership check above.
             _balanceOf[_from]--;
-
+            // Will never overflow because the recipient's balance can't
+            // realistically overflow.
             _balanceOf[_to]++;
         }
 
