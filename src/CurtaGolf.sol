@@ -21,6 +21,14 @@ import { KingERC721 } from "./tokens/KingERC721.sol";
 /// solver) pair).
 contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
     // -------------------------------------------------------------------------
+    // Constants
+    // -------------------------------------------------------------------------
+
+    /// @notice The maximum number of seconds that must pass before a commit can
+    /// be revealed.
+    uint256 constant MIN_COMMIT_AGE = 60;
+
+    // -------------------------------------------------------------------------
     // Immutable storage
     // -------------------------------------------------------------------------
 
@@ -68,7 +76,7 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
         if (getCommit[_key].player != address(0)) revert KeyAlreadyCommitted(_key);
 
         // Commit the key.
-        getCommit[_key] = Commit({ player: msg.sender, blockNumber: uint96(block.number) });
+        getCommit[_key] = Commit({ player: msg.sender, timestamp: uint96(block.timestamp) });
     }
 
     /// @inheritdoc ICurtaGolf
@@ -78,8 +86,16 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
         // Compute key.
         bytes32 key = keccak256(abi.encode(msg.sender, _solution, _salt));
 
+        Commit memory commit = getCommit[key];
         // Revert if the corresponding commit was never made.
-        if (getCommit[key].player == address(0)) revert KeyNotCommitted(key);
+        if (commit.player == address(0)) revert KeyNotCommitted(key);
+
+        // Revert if the commit is too new.
+        unchecked {
+            if (uint256(commit.timestamp) + MIN_COMMIT_AGE > block.timestamp) {
+                revert CommitTooNew(key);
+            }
+        }
 
         _submit(_courseId, _solution, _recipient);
     }

@@ -17,6 +17,10 @@ interface ICurtaGolf {
     /// @notice Emitted when an address is the zero address.
     error AddressIsZeroAddress();
 
+    /// @notice Emitted when a commit is too new.
+    /// @param _key The key of a commit.
+    error CommitTooNew(bytes32 _key);
+
     /// @notice Emitted when a course does not exist.
     /// @param _id The ID of a course.
     error CourseDoesNotExist(uint32 _id);
@@ -42,10 +46,10 @@ interface ICurtaGolf {
     /// @notice A struct containing data about a submission's commit.
     /// @param player The address of the player (i.e. the address that is making
     /// the commit and the submission).
-    /// @param blockNumber The block number of the commit.
+    /// @param timestamp The block timestamp the commit was posted.
     struct Commit {
         address player;
-        uint96 blockNumber;
+        uint96 timestamp;
     }
 
     /// @notice A struct containing data about a course.
@@ -118,8 +122,8 @@ interface ICurtaGolf {
     /// @param _key The key of the commit.
     /// @return player The address of the player (i.e. the address that is
     /// making the commit and the submission).
-    /// @return blockNumber The block number of the commit.
-    function getCommit(bytes32 _key) external view returns (address player, uint96 blockNumber);
+    /// @return timestamp The block timestamp the commit was posted.
+    function getCommit(bytes32 _key) external view returns (address player, uint96 timestamp);
 
     /// @param _id The ID of the course.
     /// @param solutionCount The number of successful solutions submitted.
