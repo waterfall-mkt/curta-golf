@@ -26,7 +26,7 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
 
     /// @notice The maximum number of seconds that must pass before a commit can
     /// be revealed.
-    uint256 constant MIN_COMMIT_AGE = 255;
+    uint256 constant MIN_COMMIT_AGE = 60;
 
     // -------------------------------------------------------------------------
     // Immutable storage
@@ -76,7 +76,7 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
         if (getCommit[_key].player != address(0)) revert KeyAlreadyCommitted(_key);
 
         // Commit the key.
-        getCommit[_key] = Commit({ player: msg.sender, blockNumber: uint96(block.number) });
+        getCommit[_key] = Commit({ player: msg.sender, timestamp: uint96(block.timestamp) });
     }
 
     /// @inheritdoc ICurtaGolf
@@ -92,7 +92,9 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
 
         // Revert if the commit is too new.
         unchecked {
-            if (commit.blockNumber + MIN_COMMIT_AGE < block.timestamp) revert CommitTooNew(key);
+            if (uint256(commit.timestamp) + MIN_COMMIT_AGE > block.timestamp) {
+                revert CommitTooNew(key);
+            }
         }
 
         _submit(_courseId, _solution, _recipient);
