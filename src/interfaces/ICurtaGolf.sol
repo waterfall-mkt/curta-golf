@@ -17,6 +17,10 @@ interface ICurtaGolf {
     /// @notice Emitted when an address is the zero address.
     error AddressIsZeroAddress();
 
+    /// @notice Emitted when a commit is too new.
+    /// @param _key The key of a commit.
+    error CommitTooNew(bytes32 _key);
+
     /// @notice Emitted when a course does not exist.
     /// @param _id The ID of a course.
     error CourseDoesNotExist(uint32 _id);
