@@ -5,9 +5,9 @@ libs = ['lib']
 solc = "0.8.21"
 optimizer_runs = 1_000_000
 remappings = [
-    'transmissions11/solmate/=lib/solmate/',
     'forge-std/=lib/forge-std/src/',
     'solady/=lib/solady/',
+    'solmate/=lib/solmate/src',
 ]
 
 
@@ -23,7 +23,10 @@ number_underscore = "thousands"
 [rpc_endpoints]
 goerli = "${RPC_URL_GOERLI}"
 mainnet = "${RPC_URL_MAINNET}"
+base_goreli = "${RPC_URL_BASE_GOERLI"
+base_mainnet = "${RPC_URL_BASE_MAINNET}"
 
 [etherscan]
-goerli = { key = "${ETHERSCAN_KEY}", url = "https://api-goerli.etherscan.io/api" }
-mainnet = { key = "${ETHERSCAN_KEY}" }
+goerli = {key = "${ETHERSCAN_KEY}", url = "https://api-goerli.etherscan.io/api"}
+mainnet = {key = "${ETHERSCAN_KEY}"}
+base_mainnet = {key = "${BASESCAN_KEY}"}
