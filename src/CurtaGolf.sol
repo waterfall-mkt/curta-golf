@@ -86,13 +86,13 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
         // Compute key.
         bytes32 key = keccak256(abi.encode(msg.sender, _solution, _salt));
 
-        Commit memory commit = getCommit[key];
+        Commit memory commitData = getCommit[key];
         // Revert if the corresponding commit was never made.
-        if (commit.player == address(0)) revert KeyNotCommitted(key);
+        if (commitData.player == address(0)) revert KeyNotCommitted(key);
 
         // Revert if the commit is too new.
         unchecked {
-            if (uint256(commit.timestamp) + MIN_COMMIT_AGE > block.timestamp) {
+            if (uint256(commitData.timestamp) + MIN_COMMIT_AGE > block.timestamp) {
                 revert CommitTooNew(key);
             }
         }

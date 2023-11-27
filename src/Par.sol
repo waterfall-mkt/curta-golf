@@ -44,7 +44,9 @@ contract Par is ERC721("Par", "PAR"), ERC721TokenReceiver {
     // ERC721 storage (+ custom)
     // -------------------------------------------------------------------------
 
-
+    /// @notice The mapping of token IDs to token data, which contains the owner
+    /// of the token and the amount of gas used on the owner's leading solution
+    /// for the corresponding course
     mapping(uint256 => TokenData) internal _tokenData;
 
     // -------------------------------------------------------------------------
@@ -69,7 +71,7 @@ contract Par is ERC721("Par", "PAR"), ERC721TokenReceiver {
 
         // Compute token ID and fetch token data.
         uint256 tokenId = (_courseId << 160) | uint256(uint160(_to));
-        ParERC721.TokenData memory tokenData = _tokenData[tokenId];
+        TokenData memory tokenData = _tokenData[tokenId];
 
         // Mint a new token if the token does not exist or update the gas used
         // on the token if the new gas used is less than the current gas used.
@@ -108,6 +110,12 @@ contract Par is ERC721("Par", "PAR"), ERC721TokenReceiver {
     // ERC721 functions
     // -------------------------------------------------------------------------
 
+    /// @notice Approve some address `_spender` to transfer the token with ID
+    /// `_id`.
+    /// @dev The function reverts if the sender is not the owner or not an
+    /// operator for the token.
+    /// @param _spender The address to approve.
+    /// @param _id The ID of the token to approve.
     function approve(address _spender, uint256 _id) public override {
         address owner = _tokenData[_id].owner;
 
@@ -122,10 +130,18 @@ contract Par is ERC721("Par", "PAR"), ERC721TokenReceiver {
         emit Approval(owner, _spender, _id);
     }
 
+    /// @notice Returns the owner of the token with ID `_id`.
+    /// @param _id The ID of the token.
+    /// @return owner The address of the owner of the token.
     function ownerOf(uint256 _id) public view override returns (address owner) {
         require((owner = _tokenData[_id].owner) != address(0), "NOT_MINTED");
     }
 
+    /// @notice Transfer the token with ID `_id` from `_from` to `_to` without
+    /// checking if `_to` is capable of receiving the token.
+    /// @dev The function reverts if the sender is not the owner, not an
+    /// operator, not the approved address for the token, not a valid token ID,
+    /// or `_to` is the 0 address.
     function transferFrom(address _from, address _to, uint256 _id) public override {
         // Revert if the token is not being transferred from the current owner.
         require(_from == _tokenData[_id].owner, "WRONG_FROM");
@@ -178,7 +194,9 @@ contract Par is ERC721("Par", "PAR"), ERC721TokenReceiver {
     /// @notice Returns the token data for the token with ID `_id` if the token
     /// exists.
     /// @param _id The ID of the token.
-    /// @return tokenData The token data.
+    /// @return tokenData A struct containing the owner of the token and the
+    /// amount of gas used on the owner's leading solution for the corresponding
+    /// course in the shape `{ owner: address, gasUsed: uint32 }`.
     function getTokenData(uint256 _id) external view returns (TokenData memory tokenData) {
         require((tokenData = _tokenData[_id]).owner != address(0), "NOT_MINTED");
     }
