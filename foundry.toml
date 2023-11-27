@@ -21,12 +21,13 @@ quote_style = "double"
 number_underscore = "thousands"
 
 [rpc_endpoints]
+base_goerli = "${RPC_URL_BASE_GOERLI"
+base_mainnet = "${RPC_URL_BASE_MAINNET}"
 goerli = "${RPC_URL_GOERLI}"
 mainnet = "${RPC_URL_MAINNET}"
-base_goreli = "${RPC_URL_BASE_GOERLI"
-base_mainnet = "${RPC_URL_BASE_MAINNET}"
 
 [etherscan]
+base_goerli = {key = "${BASESCAN_KEY}", url = "https://api-goerli.basescan.org/api"}
+base_mainnet = {key = "${BASESCAN_KEY}", url = "https://api-mainnet.basescan.org/api"}
 goerli = {key = "${ETHERSCAN_KEY}", url = "https://api-goerli.etherscan.io/api"}
 mainnet = {key = "${ETHERSCAN_KEY}"}
-base_mainnet = {key = "${BASESCAN_KEY}"}
