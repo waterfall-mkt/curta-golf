@@ -3,7 +3,7 @@ import { IMockCourse } from "./MockCourse.sol";
 
 /// @title An efficient solution to `MockCourse`.
 /// @author fiveoutofnine
-contract MockCourseSolutionEfficient is MockCourse {
+contract MockCourseSolutionEfficient is IMockCourse {
     /// @inheritdoc IMockCourse
     function add(uint256 _a, uint256 _b) external pure override returns (uint256) {
         unchecked {
@@ -14,7 +14,7 @@ contract MockCourseSolutionEfficient is MockCourse {
 
 /// @title An inefficient solution to `MockCourse`.
 /// @author fiveoutofnine
-contract MockCourseSolutionInefficient is MockCourse {
+contract MockCourseSolutionInefficient is IMockCourse {
     /// @inheritdoc IMockCourse
     function add(uint256 _a, uint256 _b) external pure override returns (uint256) {
         // Waste some gas.
