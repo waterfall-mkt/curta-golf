@@ -6,8 +6,8 @@ solc = "0.8.21"
 optimizer_runs = 1_000_000
 remappings = [
     'forge-std/=lib/forge-std/src/',
-    'solady/=lib/solady/',
-    'solmate/=lib/solmate/src',
+    'solady/=lib/solady/src/',
+    'solmate/=lib/solmate/src/',
 ]
 
 
