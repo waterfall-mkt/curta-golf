@@ -126,7 +126,7 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
                 CourseData({ course: _course, gasUsed: 0, solutionCount: 0, kingCount: 0 });
 
             // Emit event.
-            emit AddCourse(curCourseId, ICourse(msg.sender));
+            emit AddCourse(curCourseId, _course);
         }
     }
 
