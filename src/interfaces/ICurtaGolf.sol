@@ -105,10 +105,6 @@ interface ICurtaGolf {
     /// @notice The Par contract.
     function par() external view returns (Par);
 
-    /// @return The address of the renderer used to render tokens' metadata
-    /// returned by {CurtaGolf.tokenURI}.
-    function renderer() external view returns (address);
-
     // -------------------------------------------------------------------------
     // Storage
     // -------------------------------------------------------------------------

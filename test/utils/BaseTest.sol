@@ -6,12 +6,15 @@ import { LibRLP } from "solady/utils/LibRLP.sol";
 
 import { CurtaGolf } from "../../src/CurtaGolf.sol";
 import { Par } from "../../src/Par.sol";
+import { ICourse } from "../../src/interfaces/ICourse.sol";
+import { IPurityChecker } from "../../src/interfaces/IPurityChecker.sol";
+import { PurityChecker } from "../../src/utils/PurityChecker.sol";
 
 /// @notice A base test contract for Curta Golf with events, labeled addresses,
 /// and helper functions for testing. When `BaseTest` is deployed, it sets and
 /// labels 3 addresses: `owner` (owner of the `CurtaGolf` deploy), `solver1`,
-/// and `solver2. Then, in `setUp`, it deploys an instance of `Par` and
-/// `CurtaGolf` with the renderer set to `address(0)`.
+/// and `solver2`. Then, in `setUp`, it deploys an instance of `CurtaGolf`,
+/// `Par`, and `PurityChecker`.
 contract BaseTest is Test {
     // -------------------------------------------------------------------------
     // `CurtaGolf` events
@@ -76,13 +79,13 @@ contract BaseTest is Test {
     // -------------------------------------------------------------------------
 
     /// @notice Address of the owner
-    address immutable internal owner;
+    address internal immutable owner;
 
     /// @notice Address to solver 1.
-    address immutable internal solver1;
+    address internal immutable solver1;
 
     /// @notice Address of a solver.
-    address immutable internal solver2;
+    address internal immutable solver2;
 
     // -------------------------------------------------------------------------
     // Contracts
@@ -93,6 +96,9 @@ contract BaseTest is Test {
 
     /// @notice The Par contract.
     Par internal par;
+
+    /// @notice The purity checker contract.
+    PurityChecker internal purityChecker;
 
     // -------------------------------------------------------------------------
     // Setup
@@ -108,18 +114,20 @@ contract BaseTest is Test {
         vm.label(solver2, "Solver 2");
     }
 
-    /// @notice Deploys an instance of `Par` and `CurtaGolf` with the renderer
-    /// set to `address(0)`.
+    /// @notice Deploys an instance of `CurtaGolf`, `Par`, and `PurityChecker`.
     function setUp() public {
-        // Curta Golf will be deployed on transaction #2, and Par will be
-        // deployed on transaction #1.
-        address curtaGolfAddress = LibRLP.computeAddress(address(this), 2);
-        address parAddress = LibRLP.computeAddress(address(this), 1);
+        // Transaction #1.
+        purityChecker = new PurityChecker();
 
-        // Transaction #1: Deploy Par.
+        // Curta Golf will be deployed on transaction #3, and Par will be
+        // deployed on transaction #2.
+        address curtaGolfAddress = LibRLP.computeAddress(address(this), 3);
+        address parAddress = LibRLP.computeAddress(address(this), 2);
+
+        // Transaction #2: Deploy Par.
         par = new Par(curtaGolfAddress);
-        // Transaction #2: Deploy Curta Golf.
-        curtaGolf = new CurtaGolf(par, address(0));
+        // Transaction #3: Deploy Curta Golf.
+        curtaGolf = new CurtaGolf(par, purityChecker);
 
         // Transfer ownership of Curta Golf to `owner`.
         curtaGolf.transferOwnership(owner);
