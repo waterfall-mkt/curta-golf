@@ -9,12 +9,14 @@ import { Par } from "../../src/Par.sol";
 import { ICourse } from "../../src/interfaces/ICourse.sol";
 import { IPurityChecker } from "../../src/interfaces/IPurityChecker.sol";
 import { PurityChecker } from "../../src/utils/PurityChecker.sol";
+import { MockCourse } from "../../src/utils/mock/MockCourse.sol";
 
 /// @notice A base test contract for Curta Golf with events, labeled addresses,
 /// and helper functions for testing. When `BaseTest` is deployed, it sets and
 /// labels 3 addresses: `owner` (owner of the `CurtaGolf` deploy), `solver1`,
 /// and `solver2`. Then, in `setUp`, it deploys an instance of `CurtaGolf`,
-/// `Par`, and `PurityChecker`.
+/// `MockCourse`, `Par`, `PurityChecker`, and adds `MockCourse` to `CurtaGolf`
+/// as `owner`.
 contract BaseTest is Test {
     // -------------------------------------------------------------------------
     // `CurtaGolf` events
@@ -94,6 +96,9 @@ contract BaseTest is Test {
     /// @notice The Curta Golf contract.
     CurtaGolf internal curtaGolf;
 
+    /// @notice A mock Curta Golf Course.
+    ICourse internal mockCourse;
+
     /// @notice The Par contract.
     Par internal par;
 
@@ -114,7 +119,8 @@ contract BaseTest is Test {
         vm.label(solver2, "Solver 2");
     }
 
-    /// @notice Deploys an instance of `CurtaGolf`, `Par`, and `PurityChecker`.
+    /// @notice Deploys an instance of `CurtaGolf`, `MockCourse`, `Par`,
+    /// `PurityChecker`, and adds `MockCourse` to `CurtaGolf` as `owner`.
     function setUp() public {
         // Transaction #1.
         purityChecker = new PurityChecker();
@@ -128,12 +134,19 @@ contract BaseTest is Test {
         par = new Par(curtaGolfAddress);
         // Transaction #3: Deploy Curta Golf.
         curtaGolf = new CurtaGolf(par, purityChecker);
+        // Transaction #4: Deploy the mock course.
+        mockCourse = new MockCourse();
 
         // Transfer ownership of Curta Golf to `owner`.
         curtaGolf.transferOwnership(owner);
 
+        // Add the mock course to Curta Golf.
+        vm.prank(owner);
+        curtaGolf.addCourse(mockCourse);
+
         // Label addresses.
-        vm.label(parAddress, "Par");
-        vm.label(curtaGolfAddress, "CurtaGolf");
+        vm.label(address(par), "`Par`");
+        vm.label(address(curtaGolf), "`CurtaGolf`");
+        vm.label(address(mockCourse), "`MockCourse`");
     }
 }
