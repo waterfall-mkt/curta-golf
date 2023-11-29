@@ -5,6 +5,17 @@ pragma solidity ^0.8.21;
 /// @notice A course is a gas golfing challenge, where the goal is for players
 /// to submit solutions that use as little gas as possible.
 interface ICourse {
+    // -------------------------------------------------------------------------
+    // Errors
+    // -------------------------------------------------------------------------
+
+    /// @notice Emitted when the solution is incorrect.
+    error IncorrectSolution();
+
+    // -------------------------------------------------------------------------
+    // Functions
+    // -------------------------------------------------------------------------
+
     /// @notice Returns the course's name.
     /// @return The course's name.
     function name() external pure returns (string memory);

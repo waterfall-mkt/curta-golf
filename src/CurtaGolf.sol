@@ -35,9 +35,6 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
     /// @inheritdoc ICurtaGolf
     Par public immutable override par;
 
-    /// @inheritdoc ICurtaGolf
-    address public immutable override renderer;
-
     // -------------------------------------------------------------------------
     // Storage
     // -------------------------------------------------------------------------
@@ -59,11 +56,16 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
     // -------------------------------------------------------------------------
 
     /// @param _par The Par contract.
-    /// @param _renderer The address of the renderer used to render tokens'
-    /// metadata.
-    constructor(Par _par, address _renderer) KingERC721("Curta Golf", "KING") Owned(msg.sender) {
+    /// @param _purityChecker The purity checker contract.
+    constructor(Par _par, IPurityChecker _purityChecker)
+        KingERC721("Curta Golf", "KING")
+        Owned(msg.sender)
+    {
         par = _par;
-        renderer = _renderer;
+        purityChecker = _purityChecker;
+
+        // Emit event.
+        emit SetPurityChecker(_purityChecker);
     }
 
     // -------------------------------------------------------------------------
@@ -124,7 +126,7 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
                 CourseData({ course: _course, gasUsed: 0, solutionCount: 0, kingCount: 0 });
 
             // Emit event.
-            emit AddCourse(curCourseId, ICourse(msg.sender));
+            emit AddCourse(curCourseId, _course);
         }
     }
 
