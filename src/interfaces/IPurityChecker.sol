@@ -7,6 +7,7 @@ pragma solidity ^0.8.21;
 interface IPurityChecker {
     /// @notice Checks whether the given bytecode `_code` is pure.
     /// @param _code The bytecode to check.
+    /// @param _allowedOpcodes Bitmap of opcodes to check against.
     /// @return bool Whether the given bytecode is pure.
-    function check(bytes memory _code) external view returns (bool);
+    function check(bytes memory _code, uint256 _allowedOpcodes) external pure returns (bool);
 }

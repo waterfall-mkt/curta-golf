@@ -46,6 +46,9 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
     IPurityChecker public override purityChecker;
 
     /// @inheritdoc ICurtaGolf
+    mapping(uint32 courseId => uint256 allowedOpcodes) public override allowedOpcodes;
+
+    /// @inheritdoc ICurtaGolf
     mapping(bytes32 key => Commit commit) public override getCommit;
 
     /// @inheritdoc ICurtaGolf
@@ -114,20 +117,36 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
     // -------------------------------------------------------------------------
 
     /// @inheritdoc ICurtaGolf
-    function addCourse(ICourse _course) external onlyOwner {
+    function addCourse(ICourse _course, uint256 _allowedOpcodes) external onlyOwner {
         // Revert if `_course` is the zero address.
         if (address(_course) == address(0)) revert AddressIsZeroAddress();
 
         unchecked {
             uint32 curCourseId = ++courseId;
 
+            // Set allowed opcodes for the course
+            allowedOpcodes[curCourseId] = _allowedOpcodes;
+
             // Add the course.
             getCourse[curCourseId] =
                 CourseData({ course: _course, gasUsed: 0, solutionCount: 0, kingCount: 0 });
 
-            // Emit event.
+            // Emit events.
+            emit SetAllowedOpcodes(curCourseId, _allowedOpcodes);
             emit AddCourse(curCourseId, _course);
         }
+    }
+
+    /// @inheritdoc ICurtaGolf
+    function setAllowedOpcodes(uint32 _courseId, uint256 _allowedOpcodes) external onlyOwner {
+        // Revert if the course does not exist.
+        if (address(getCourse[_courseId].course) == address(0)) revert CourseDoesNotExist(_courseId);
+
+        // Set allowed opcodes for the course
+        allowedOpcodes[_courseId] = _allowedOpcodes;
+
+        // Emit event.
+        emit SetAllowedOpcodes(_courseId, _allowedOpcodes);
     }
 
     /// @inheritdoc ICurtaGolf
@@ -157,7 +176,7 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
         if (address(courseData.course) == address(0)) revert CourseDoesNotExist(_courseId);
 
         // Revert if the solution contains invalid opcodes.
-        if (!purityChecker.check(_solution)) revert PollutedSolution();
+        if (!purityChecker.check(_solution, allowedOpcodes[_courseId])) revert PollutedSolution();
 
         // Deploy the solution.
         address target;
@@ -166,7 +185,9 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
         }
 
         // Run solution and mint NFT if it beats the leading score.
-        uint32 gasUsed = courseData.course.run(target, block.prevrandao);
+        uint256 start = gasleft();
+        courseData.course.run(target, block.prevrandao);
+        uint32 gasUsed = uint32(start - gasleft());
         if (courseData.gasUsed == 0 || gasUsed < courseData.gasUsed) {
             // Update course's leading score.
             courseData.gasUsed = gasUsed;

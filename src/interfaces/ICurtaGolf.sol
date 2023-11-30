@@ -88,6 +88,11 @@ interface ICurtaGolf {
         uint32 indexed courseId, address indexed recipient, address indexed target
     );
 
+    /// @notice Emitten when the allowed opcodes for a course are set.
+    /// @param courseId The ID of the course.
+    /// @param allowedOpcodes The bitmap of allowed opcodes.
+    event SetAllowedOpcodes(uint32 indexed courseId, uint256 indexed allowedOpcodes);
+
     /// @notice Emitted when a new purity checker is set.
     /// @param purityChecker The address of the new purity checker.
     event SetPurityChecker(IPurityChecker indexed purityChecker);
@@ -102,18 +107,29 @@ interface ICurtaGolf {
     // Immutable storage
     // -------------------------------------------------------------------------
 
-    /// @notice The Par contract.
+    /// @notice Retieves the Par contract.
+    /// @return The Par contract.
     function par() external view returns (Par);
 
     // -------------------------------------------------------------------------
     // Storage
     // -------------------------------------------------------------------------
 
+    /// @notice Returns the ID of the next course.
     /// @return The total number of courses.
     function courseId() external view returns (uint32);
 
-    /// @return The purity checker.
+    /// @return The PurityChecker contract.
     function purityChecker() external view returns (IPurityChecker);
+
+    /// @notice Retrieves a bitmap of allowed opcodes for a given course ID.
+    /// @dev For the bitmap, we use a uint256 where each bit corresponds
+    /// to the opcode's value. For example, if the 0x5f opcode is
+    /// allowed, then the 0x5f bit is set to 1 and 0 otherwise.
+    /// @param _id The ID of the course.
+    /// @return _opcodeBitmap A bitmap representing the allowed opcodes
+    /// for the course.
+    function allowedOpcodes(uint32 _id) external view returns (uint256 _opcodeBitmap);
 
     /// @param _key The key of the commit.
     /// @return player The address of the player (i.e. the address that is
@@ -122,8 +138,10 @@ interface ICurtaGolf {
     function getCommit(bytes32 _key) external view returns (address player, uint96 timestamp);
 
     /// @param _id The ID of the course.
-    /// @param solutionCount The number of successful solutions submitted.
-    /// @param kingCount The number of times the course has had a new King.
+    /// @return course The address of the course.
+    /// @return gasUsed The current leading solution's gas usage.
+    /// @return solutionCount The number of successful solutions submitted.
+    /// @return kingCount The number of times the course has had a new King.
     function getCourse(uint32 _id)
         external
         view
@@ -135,7 +153,8 @@ interface ICurtaGolf {
 
     /// @notice Adds a course to the contract.
     /// @param _course The address of the course.
-    function addCourse(ICourse _course) external;
+    /// @param _allowedOpcodes The bitmap of allowed opcodes.
+    function addCourse(ICourse _course, uint256 _allowedOpcodes) external;
 
     /// @notice Commits a solution to a course to prevent front-running.
     /// @dev `_key` is computed as
@@ -144,6 +163,12 @@ interface ICurtaGolf {
     /// number.
     /// @param _key The key of the commit.
     function commit(bytes32 _key) external;
+
+    /// @notice Sets the allowed opcodes for a course.
+    /// @dev Can only be called after the course has been added.
+    /// @param _courseId The ID of the course.
+    /// @param _allowedOpcodes The bitmap of allowed opcodes.
+    function setAllowedOpcodes(uint32 _courseId, uint256 _allowedOpcodes) external;
 
     /// @notice Sets a new purity checker.
     /// @dev The purity checker may need to be updated according to new EVM
