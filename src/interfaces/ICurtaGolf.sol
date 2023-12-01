@@ -88,7 +88,7 @@ interface ICurtaGolf {
         uint32 indexed courseId, address indexed recipient, address indexed target
     );
 
-    /// @notice Emitten when the allowed opcodes for a course are set.
+    /// @notice Emitted when new allowed opcodes are set for a course.
     /// @param courseId The ID of the course.
     /// @param allowedOpcodes The bitmap of allowed opcodes.
     event SetAllowedOpcodes(uint32 indexed courseId, uint256 indexed allowedOpcodes);
