@@ -142,7 +142,7 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
         // Revert if the course does not exist.
         if (address(getCourse[_courseId].course) == address(0)) revert CourseDoesNotExist(_courseId);
 
-        // Set allowed opcodes for the course
+        // Set allowed opcodes for the course.
         allowedOpcodes[_courseId] = _allowedOpcodes;
 
         // Emit event.
