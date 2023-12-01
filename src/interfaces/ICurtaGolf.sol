@@ -119,7 +119,8 @@ interface ICurtaGolf {
     /// @return The total number of courses.
     function courseId() external view returns (uint32);
 
-    /// @return The PurityChecker contract.
+    /// @notice Returns the purity checker contract.
+    /// @return The purity checker contract.
     function purityChecker() external view returns (IPurityChecker);
 
     /// @notice Retrieves a bitmap of allowed opcodes for a given course ID.
