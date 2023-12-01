@@ -123,13 +123,15 @@ interface ICurtaGolf {
     /// @return The purity checker contract.
     function purityChecker() external view returns (IPurityChecker);
 
-    /// @notice Retrieves a bitmap of allowed opcodes for a given course ID.
-    /// @dev For the bitmap, we use a uint256 where each bit corresponds
-    /// to the opcode's value. For example, if the 0x5f opcode is
-    /// allowed, then the 0x5f bit is set to 1 and 0 otherwise.
+    /// @notice Returns the bitmap of allowed opcodes for a given course ID.
+    /// @dev Each bitmap is a `uint256`, where a `1` at the LSb position equal
+    /// to the opcode's value indicates that the opcode is allowed. For example,
+    /// if only the `0x5f` (95) opcode is allowed for some course, the bitmap
+    /// would be `1 << 95`. To check if some opcode `opcode` is allowed,
+    /// `(bitmap >> opcode) & 1` must be `1`.
     /// @param _id The ID of the course.
-    /// @return _opcodeBitmap A bitmap representing the allowed opcodes
-    /// for the course.
+    /// @return _opcodeBitmap A bitmap, where a 1 at the LSb position equal to
+    /// the opcode's value indicates that the opcode is allowed.
     function allowedOpcodes(uint32 _id) external view returns (uint256 _opcodeBitmap);
 
     /// @param _key The key of the commit.
