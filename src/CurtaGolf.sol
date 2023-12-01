@@ -124,7 +124,7 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
         unchecked {
             uint32 curCourseId = ++courseId;
 
-            // Set allowed opcodes for the course
+            // Set allowed opcodes for the course.
             allowedOpcodes[curCourseId] = _allowedOpcodes;
 
             // Add the course.
