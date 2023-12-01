@@ -107,7 +107,7 @@ interface ICurtaGolf {
     // Immutable storage
     // -------------------------------------------------------------------------
 
-    /// @notice Retieves the Par contract.
+    /// @notice Returns the Par contract.
     /// @return The Par contract.
     function par() external view returns (Par);
 
