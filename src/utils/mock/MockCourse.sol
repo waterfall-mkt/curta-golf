@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: MIT
+pragma solidity ^0.8.21;
+
 import { ICourse } from "../../interfaces/ICourse.sol";
 
 /// @title A mock Curta Golf Course for testing
@@ -10,23 +12,17 @@ contract MockCourse is ICourse {
     }
 
     /// @inheritdoc ICourse
-    function run(address _target, uint256 _seed) external view returns (uint32) {
-        uint256 start = gasleft();
-
+    function run(address _target, uint256 _seed) external pure {
         // Generate inputs from `_seed`.
         uint256 a = _seed >> 128;
         uint256 b = _seed & 0xffffffffffffffffffffffffffffffff;
 
         // Run solution.
         uint256 c = IMockCourse(_target).add(a, b);
-        uint256 end = gasleft();
 
         unchecked {
             // Verify solution.
             if (c != a + b) revert IncorrectSolution();
-
-            // Return gas used.
-            return uint32(start - end);
         }
     }
 }
