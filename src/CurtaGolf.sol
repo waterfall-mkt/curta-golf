@@ -143,7 +143,9 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
     /// @inheritdoc ICurtaGolf
     function setAllowedOpcodes(uint32 _courseId, uint256 _allowedOpcodes) external onlyOwner {
         // Revert if the course does not exist.
-        if (address(getCourse[_courseId].course) == address(0)) revert CourseDoesNotExist(_courseId);
+        if (address(getCourse[_courseId].course) == address(0)) {
+            revert CourseDoesNotExist(_courseId);
+        }
 
         // Set allowed opcodes for the course.
         allowedOpcodes[_courseId] = _allowedOpcodes;

@@ -8,7 +8,12 @@ import { IPurityChecker } from "../interfaces/IPurityChecker.sol";
 /// @notice A purity checker checks whether a given contract is pure, i.e. that
 /// it's restricted to a set of instructions/opcodes, by analyzing its bytecode.
 contract PurityChecker is IPurityChecker {
-    function check(bytes memory _code, uint256 _allowedOpcodes) external pure override returns (bool satisfied) {
+    function check(bytes memory _code, uint256 _allowedOpcodes)
+        external
+        pure
+        override
+        returns (bool satisfied)
+    {
         return _allowedOpcodes > 0;
         /* assembly ("memory-safe") {
             function isPush(opcode) -> ret {
