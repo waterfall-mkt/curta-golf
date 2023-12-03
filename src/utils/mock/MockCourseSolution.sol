@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: MIT
+pragma solidity ^0.8.21;
+
 import { IMockCourse } from "./MockCourse.sol";
 
 /// @title An efficient solution to `MockCourse`.
@@ -31,5 +33,21 @@ contract MockCourseSolutionInefficient is IMockCourse {
         for (uint256 i; i < 100; ++i) { }
 
         return _a + _b;
+    }
+}
+
+/// @title An incorrect solution to `MockCourse`.
+/// @author fiveouofnine
+/// @dev When compiled with `0.8.21+commit.d9974bed` and `1_000_000` optimizer
+/// runs, the contract has the following bytecode:
+/// ```
+/// 0x6080604052348015600f57600080fd5b5060a88061001e6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063771602f714602d575b600080fd5b603f60383660046051565b0160010190565b60405190815260200160405180910390f35b60008060408385031215606357600080fd5b5050803592602090910135915056fea2646970667358221220c0672b35ca81e6e3ee229462853d66fda7b44dc7daae20c26d00b79ac2e3821464736f6c63430008150033
+/// ```
+contract MockCourseSolutionIncorrect is IMockCourse {
+    /// @inheritdoc IMockCourse
+    function add(uint256 _a, uint256 _b) external pure override returns (uint256) {
+        unchecked {
+            return _a + _b + 1;
+        }
     }
 }
