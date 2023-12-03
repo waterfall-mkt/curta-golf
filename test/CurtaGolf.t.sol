@@ -442,7 +442,7 @@ contract CurtaGolfTest is BaseTest {
             assertEq(gasUsed, 0);
             assertEq(solutionCount, 0);
             assertEq(kingCount, 0);
-            assertEq(curtaGolf.allowedOpcodes(2), 0);
+            assertEq(curtaGolf.getAllowedOpcodes(2), 0);
         }
 
         // Add the course.
@@ -461,7 +461,7 @@ contract CurtaGolfTest is BaseTest {
             assertEq(gasUsed, 0);
             assertEq(solutionCount, 0);
             assertEq(kingCount, 0);
-            assertEq(curtaGolf.allowedOpcodes(2), type(uint256).max);
+            assertEq(curtaGolf.getAllowedOpcodes(2), type(uint256).max);
         }
     }
 
@@ -487,7 +487,7 @@ contract CurtaGolfTest is BaseTest {
     /// opcodes for a course.
     function test_setAllowedOpcodes() public {
         // Check that the opcodes for course #1 prior to setting new opcodes.
-        assertEq(curtaGolf.allowedOpcodes(1), type(uint256).max);
+        assertEq(curtaGolf.getAllowedOpcodes(1), type(uint256).max);
 
         // Set new opcodes for course #1.
         vm.prank(owner);
@@ -496,7 +496,7 @@ contract CurtaGolfTest is BaseTest {
         curtaGolf.setAllowedOpcodes(1, type(uint256).max - 1);
 
         // Check that the opcodes for course #1 were set correctly.
-        assertEq(curtaGolf.allowedOpcodes(1), type(uint256).max - 1);
+        assertEq(curtaGolf.getAllowedOpcodes(1), type(uint256).max - 1);
     }
 
     // -------------------------------------------------------------------------

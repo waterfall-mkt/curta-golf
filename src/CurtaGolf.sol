@@ -46,7 +46,7 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
     IPurityChecker public override purityChecker;
 
     /// @inheritdoc ICurtaGolf
-    mapping(uint32 courseId => uint256 allowedOpcodes) public override allowedOpcodes;
+    mapping(uint32 courseId => uint256 getAllowedOpcodes) public override getAllowedOpcodes;
 
     /// @inheritdoc ICurtaGolf
     mapping(bytes32 key => Commit commit) public override getCommit;
@@ -128,7 +128,7 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
             uint32 curCourseId = ++courseId;
 
             // Set allowed opcodes for the course.
-            allowedOpcodes[curCourseId] = _allowedOpcodes;
+            getAllowedOpcodes[curCourseId] = _allowedOpcodes;
 
             // Add the course.
             getCourse[curCourseId] =
@@ -148,7 +148,7 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
         }
 
         // Set allowed opcodes for the course.
-        allowedOpcodes[_courseId] = _allowedOpcodes;
+        getAllowedOpcodes[_courseId] = _allowedOpcodes;
 
         // Emit event.
         emit SetAllowedOpcodes(_courseId, _allowedOpcodes);
@@ -181,7 +181,7 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
         if (address(courseData.course) == address(0)) revert CourseDoesNotExist(_courseId);
 
         // Revert if the solution contains invalid opcodes.
-        if (!purityChecker.check(_solution, allowedOpcodes[_courseId])) revert PollutedSolution();
+        if (!purityChecker.check(_solution, getAllowedOpcodes[_courseId])) revert PollutedSolution();
 
         // Deploy the solution.
         address target;

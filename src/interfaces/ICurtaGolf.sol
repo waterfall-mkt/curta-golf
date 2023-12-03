@@ -131,7 +131,7 @@ interface ICurtaGolf {
     /// @param _id The ID of the course.
     /// @return _opcodeBitmap A bitmap, where a 1 at the LSb position equal to
     /// the opcode's value indicates that the opcode is allowed.
-    function allowedOpcodes(uint32 _id) external view returns (uint256 _opcodeBitmap);
+    function getAllowedOpcodes(uint32 _id) external view returns (uint256 _opcodeBitmap);
 
     /// @param _key The key of the commit.
     /// @return player The address of the player (i.e. the address that is
