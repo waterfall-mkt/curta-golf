@@ -82,6 +82,9 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
 
         // Commit the key.
         getCommit[_key] = Commit({ player: msg.sender, timestamp: uint96(block.timestamp) });
+
+        // Emit event.
+        emit CommitSolution(msg.sender, _key);
     }
 
     /// @inheritdoc ICurtaGolf
@@ -229,6 +232,8 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
 
     /// @inheritdoc KingERC721
     function tokenURI(uint256 _id) public view override returns (string memory) {
+        require(_ownerOf[_id] != address(0), "NOT_MINTED");
+
         return "TODO";
     }
 }

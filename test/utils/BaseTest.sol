@@ -54,10 +54,18 @@ contract BaseTest is Test {
     event AddCourse(uint32 indexed id, ICourse indexed course);
 
     /// @notice Emitted when a commit for a solution is made.
-    /// @param courseId The ID of the course.
     /// @param player The address of the player.
     /// @param key The key of the commit.
-    event CommitSolution(uint32 indexed courseId, address indexed player, bytes32 key);
+    event CommitSolution(address indexed player, bytes32 indexed key);
+
+    /// @notice Emitted when new allowed opcodes are set for a course.
+    /// @param courseId The ID of the course.
+    /// @param allowedOpcodes The bitmap of allowed opcodes.
+    event SetAllowedOpcodes(uint32 indexed courseId, uint256 indexed allowedOpcodes);
+
+    /// @notice Emitted when a new purity checker is set.
+    /// @param purityChecker The address of the new purity checker.
+    event SetPurityChecker(IPurityChecker indexed purityChecker);
 
     /// @notice Emitted when a valid submission is made.
     /// @param courseId The ID of the course.
@@ -66,10 +74,6 @@ contract BaseTest is Test {
     event SubmitSolution(
         uint32 indexed courseId, address indexed recipient, address indexed target
     );
-
-    /// @notice Emitted when a new purity checker is set.
-    /// @param purityChecker The address of the new purity checker.
-    event SetPurityChecker(IPurityChecker indexed purityChecker);
 
     /// @notice Emitted when a course gets a new King.
     /// @param courseId The ID of the course.
@@ -112,8 +116,11 @@ contract BaseTest is Test {
     /// @notice Address to solver 1.
     address internal immutable solver1;
 
-    /// @notice Address of a solver.
+    /// @notice Address of solver 2.
     address internal immutable solver2;
+
+    /// @notice Address of solver 3.
+    address internal immutable solver3;
 
     // -------------------------------------------------------------------------
     // Contracts
@@ -148,9 +155,11 @@ contract BaseTest is Test {
         owner = makeAddr("owner");
         solver1 = makeAddr("solver1");
         solver2 = makeAddr("solver2");
+        solver3 = makeAddr("solver3");
         vm.label(owner, "Curta Golf owner");
         vm.label(solver1, "Solver 1");
         vm.label(solver2, "Solver 2");
+        vm.label(solver3, "Solver 3");
     }
 
     /// @notice Deploys an instance of `CurtaGolf`, `MockCourse`, `Par`,

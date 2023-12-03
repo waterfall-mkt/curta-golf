@@ -75,18 +75,9 @@ interface ICurtaGolf {
     event AddCourse(uint32 indexed id, ICourse indexed course);
 
     /// @notice Emitted when a commit for a solution is made.
-    /// @param courseId The ID of the course.
     /// @param player The address of the player.
     /// @param key The key of the commit.
-    event CommitSolution(uint32 indexed courseId, address indexed player, bytes32 key);
-
-    /// @notice Emitted when a valid submission is made.
-    /// @param courseId The ID of the course.
-    /// @param recipient The address of the recipient.
-    /// @param target The address of the deployed solution.
-    event SubmitSolution(
-        uint32 indexed courseId, address indexed recipient, address indexed target
-    );
+    event CommitSolution(address indexed player, bytes32 indexed key);
 
     /// @notice Emitted when new allowed opcodes are set for a course.
     /// @param courseId The ID of the course.
@@ -96,6 +87,14 @@ interface ICurtaGolf {
     /// @notice Emitted when a new purity checker is set.
     /// @param purityChecker The address of the new purity checker.
     event SetPurityChecker(IPurityChecker indexed purityChecker);
+
+    /// @notice Emitted when a valid submission is made.
+    /// @param courseId The ID of the course.
+    /// @param recipient The address of the recipient.
+    /// @param target The address of the deployed solution.
+    event SubmitSolution(
+        uint32 indexed courseId, address indexed recipient, address indexed target
+    );
 
     /// @notice Emitted when a course gets a new King.
     /// @param courseId The ID of the course.
