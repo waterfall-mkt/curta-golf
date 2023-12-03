@@ -163,7 +163,7 @@ contract BaseTest is Test {
         // Curta Golf will be deployed on transaction #3, and Par will be
         // deployed on transaction #2.
         address curtaGolfAddress = LibRLP.computeAddress(address(this), 3);
-        address parAddress = LibRLP.computeAddress(address(this), 2);
+        // address parAddress = LibRLP.computeAddress(address(this), 2);
 
         // Transaction #2: Deploy Par.
         par = new Par(curtaGolfAddress);

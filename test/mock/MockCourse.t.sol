@@ -24,7 +24,7 @@ contract MockCourseTest is BaseTest {
     /// @notice Test that calling `run` with a correct solution does not revert
     /// against a fuzzed seed.
     /// @param _seed The seed to run the course with.
-    function test_run_CorrectSolution_DoesNotRevert(uint256 _seed) public {
+    function test_run_CorrectSolution_DoesNotRevert(uint256 _seed) public view {
         mockCourse.run(address(mockSolution), _seed);
     }
 
