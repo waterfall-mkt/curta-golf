@@ -99,7 +99,7 @@ contract CurtaGolfTest is BaseTest {
         curtaGolf.submit(1, EFFICIENT_SOLUTION, solver1, 0);
     }
 
-    /// @notice Test that revealing a solution to a nonexistent course reverts.
+    /// @notice Test that submitting a solution to a nonexistent course reverts.
     function test_submit_NonexistentCourse_Reverts() public {
         bytes32 key = keccak256(abi.encode(solver1, EFFICIENT_SOLUTION, 0));
 
@@ -114,7 +114,7 @@ contract CurtaGolfTest is BaseTest {
         curtaGolf.submit(2, EFFICIENT_SOLUTION, solver1, 0);
     }
 
-    /// @notice Test that revealing a solution with invalid opcodes reverts.
+    /// @notice Test that submitting a solution with invalid opcodes reverts.
     function test_submit_PollutedSolution_Reverts() public {
         // Ban all opcodes.
         vm.prank(owner);
@@ -132,7 +132,7 @@ contract CurtaGolfTest is BaseTest {
         curtaGolf.submit(1, EFFICIENT_SOLUTION, solver1, 0);
     }
 
-    /// @notice Test that revealing an incorrect solution reverts.
+    /// @notice Test that submitting an incorrect solution reverts.
     function test_submit_IncorrectSolution_Reverts() public {
         // Commit the key.
         bytes32 key = keccak256(abi.encode(solver1, INCORRECT_SOLUTION, 0));
@@ -146,7 +146,7 @@ contract CurtaGolfTest is BaseTest {
         curtaGolf.submit(1, INCORRECT_SOLUTION, solver1, 0);
     }
 
-    /// @notice Test the emitted events and storage updates upon revealing
+    /// @notice Test the emitted events and storage updates upon submitting
     /// solutions in the following order:
     ///     1. `solver1` submits an inefficient solution but becomes the king.
     ///     2. `solver2` submits an efficient solution and becomes the new king.
@@ -288,7 +288,7 @@ contract CurtaGolfTest is BaseTest {
     // `submitDirectly`
     // -------------------------------------------------------------------------
 
-    /// @notice Test the emitted events and storage updates upon revealing
+    /// @notice Test the emitted events and storage updates upon submitting
     /// solutions in the following order:
     ///     1. `solver1` submits an inefficient solution but becomes the king.
     ///     2. `solver2` submits an efficient solution and becomes the new king.
