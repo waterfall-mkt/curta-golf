@@ -9,6 +9,14 @@ import { BaseTest } from "./utils/BaseTest.sol";
 /// @notice Unit tests for `CurtaGolf`, organized by functions.
 contract CurtaGolfTest is BaseTest {
     // -------------------------------------------------------------------------
+    // Constants
+    // -------------------------------------------------------------------------
+
+    /// @notice The maximum number of seconds that must pass before a commit can
+    /// be revealed.
+    uint256 constant MIN_COMMIT_AGE = 60;
+
+    // -------------------------------------------------------------------------
     // `par`
     // -------------------------------------------------------------------------
 
@@ -74,8 +82,7 @@ contract CurtaGolfTest is BaseTest {
     /// @param _warpSeconds The number of seconds between committing the key and
     /// revealing the solution.
     function test_submit_CommitTooNew_Reverts(uint256 _warpSeconds) public {
-        // 60 seconds is the minimum commit age.
-        _warpSeconds = bound(_warpSeconds, 0, 60 - 1);
+        _warpSeconds = bound(_warpSeconds, 0, MIN_COMMIT_AGE - 1);
         bytes32 key = keccak256(abi.encode(solver1, EFFICIENT_SOLUTION, 0));
 
         // Commit the key as `solver1` at timestamp `0`.
@@ -101,7 +108,7 @@ contract CurtaGolfTest is BaseTest {
         curtaGolf.commit(key);
 
         // Submit the solution to course 2.
-        vm.warp(61);
+        vm.warp(MIN_COMMIT_AGE + 1);
         vm.prank(solver1);
         vm.expectRevert(abi.encodeWithSelector(ICurtaGolf.CourseDoesNotExist.selector, 2));
         curtaGolf.submit(2, EFFICIENT_SOLUTION, solver1, 0);
@@ -119,7 +126,7 @@ contract CurtaGolfTest is BaseTest {
         curtaGolf.commit(key);
 
         // Submit the solution.
-        vm.warp(61);
+        vm.warp(MIN_COMMIT_AGE + 1);
         vm.prank(solver1);
         vm.expectRevert(abi.encodeWithSelector(ICurtaGolf.PollutedSolution.selector));
         curtaGolf.submit(1, EFFICIENT_SOLUTION, solver1, 0);
@@ -133,7 +140,7 @@ contract CurtaGolfTest is BaseTest {
         curtaGolf.commit(key);
 
         // Submit the incorrect solution.
-        vm.warp(61);
+        vm.warp(MIN_COMMIT_AGE + 1);
         vm.prank(solver1);
         vm.expectRevert();
         curtaGolf.submit(1, INCORRECT_SOLUTION, solver1, 0);
@@ -159,7 +166,7 @@ contract CurtaGolfTest is BaseTest {
         vm.prank(solver3);
         curtaGolf.commit(key3);
 
-        vm.warp(61);
+        vm.warp(MIN_COMMIT_AGE + 1);
 
         // Check that there is no King for course 1.
         {
