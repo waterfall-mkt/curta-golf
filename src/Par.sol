@@ -49,7 +49,11 @@ contract Par is ParERC721 {
         if (msg.sender != curtaGolf) revert Unauthorized();
 
         // Compute token ID and fetch token data.
-        uint256 tokenId = (_courseId << 160) | uint256(uint160(_to));
+        uint256 tokenId;
+        assembly {
+            // Equivalent to `tokenId = (_courseId << 160) | _to`.
+            tokenId := or(shl(160, _courseId), _to)
+        }
         TokenData memory tokenData = _tokenData[tokenId];
 
         // Mint a new token if the token does not exist or update the gas used
@@ -69,6 +73,8 @@ contract Par is ParERC721 {
     /// @param _id The token ID.
     /// @return URI for the token.
     function tokenURI(uint256 _id) public view override returns (string memory) {
+        require(_tokenData[_id].owner != address(0), "NOT_MINTED");
+
         return "TODO";
     }
 }
