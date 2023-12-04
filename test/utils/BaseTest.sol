@@ -9,14 +9,18 @@ import { Par } from "../../src/Par.sol";
 import { ICourse } from "../../src/interfaces/ICourse.sol";
 import { IPurityChecker } from "../../src/interfaces/IPurityChecker.sol";
 import { PurityChecker } from "../../src/utils/PurityChecker.sol";
-import { MockCourse } from "../../src/utils/mock/MockCourse.sol";
+import { MockCourse, IMockCourse } from "../../src/utils/mock/MockCourse.sol";
+import {
+    MockCourseSolutionEfficient,
+    MockCourseSolutionIncorrect
+} from "../../src/utils/mock/MockCourseSolution.sol";
 
 /// @notice A base test contract for Curta Golf with constants for sample
 /// solutions, events, labeled addresses, and helper functions for testing. When
 /// `BaseTest` is deployed, it sets and labels 3 addresses: `owner` (owner of
 /// the `CurtaGolf` deploy), `solver1`, and `solver2`. Then, in `setUp`, it
 /// deploys an instance of `CurtaGolf`, `MockCourse`, `Par`, `PurityChecker`,
-/// and adds `MockCourse` to `CurtaGolf` as `owner`.
+/// and adds `MockCourse` to `CurtaGolf` as `owner` with every opcode allowed.
 contract BaseTest is Test {
     // -------------------------------------------------------------------------
     // Constants
@@ -27,6 +31,12 @@ contract BaseTest is Test {
     /// compiled with `0.8.21+commit.d9974bed` and `1_000_000` optimizer runs.
     bytes constant EFFICIENT_SOLUTION =
         hex"6080604052348015600f57600080fd5b5060a58061001e6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063771602f714602d575b600080fd5b603c6038366004604e565b0190565b60405190815260200160405180910390f35b60008060408385031215606057600080fd5b5050803592602090910135915056fea264697066735822122053508e1f6f437dc11678aec86f624d167eb4ae75e36f622b6bf518e6edd2a99f64736f6c63430008150033";
+
+    /// @notice Bytecode of an incorrect solution to `MockCourse`.
+    /// @dev The bytecode outputted when `MockCourseSolutionIncorrect` is
+    /// compiled with `0.8.21+commit.d9974bed` and `1_000_000` optimizer runs.
+    bytes constant INCORRECT_SOLUTION =
+        hex"6080604052348015600f57600080fd5b5060a88061001e6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063771602f714602d575b600080fd5b603f60383660046051565b0160010190565b60405190815260200160405180910390f35b60008060408385031215606357600080fd5b5050803592602090910135915056fea2646970667358221220c0672b35ca81e6e3ee229462853d66fda7b44dc7daae20c26d00b79ac2e3821464736f6c63430008150033";
 
     /// @notice Bytecode of an inefficient solution to `MockCourse`.
     /// @dev The bytecode outputted when `MockCourseSolutionInefficient` is
@@ -44,10 +54,18 @@ contract BaseTest is Test {
     event AddCourse(uint32 indexed id, ICourse indexed course);
 
     /// @notice Emitted when a commit for a solution is made.
-    /// @param courseId The ID of the course.
     /// @param player The address of the player.
     /// @param key The key of the commit.
-    event CommitSolution(uint32 indexed courseId, address indexed player, bytes32 key);
+    event CommitSolution(address indexed player, bytes32 indexed key);
+
+    /// @notice Emitted when new allowed opcodes are set for a course.
+    /// @param courseId The ID of the course.
+    /// @param allowedOpcodes The bitmap of allowed opcodes.
+    event SetAllowedOpcodes(uint32 indexed courseId, uint256 indexed allowedOpcodes);
+
+    /// @notice Emitted when a new purity checker is set.
+    /// @param purityChecker The address of the new purity checker.
+    event SetPurityChecker(IPurityChecker indexed purityChecker);
 
     /// @notice Emitted when a valid submission is made.
     /// @param courseId The ID of the course.
@@ -56,10 +74,6 @@ contract BaseTest is Test {
     event SubmitSolution(
         uint32 indexed courseId, address indexed recipient, address indexed target
     );
-
-    /// @notice Emitted when a new purity checker is set.
-    /// @param purityChecker The address of the new purity checker.
-    event SetPurityChecker(IPurityChecker indexed purityChecker);
 
     /// @notice Emitted when a course gets a new King.
     /// @param courseId The ID of the course.
@@ -102,8 +116,11 @@ contract BaseTest is Test {
     /// @notice Address to solver 1.
     address internal immutable solver1;
 
-    /// @notice Address of a solver.
+    /// @notice Address of solver 2.
     address internal immutable solver2;
+
+    /// @notice Address of solver 3.
+    address internal immutable solver3;
 
     // -------------------------------------------------------------------------
     // Contracts
@@ -112,8 +129,14 @@ contract BaseTest is Test {
     /// @notice The Curta Golf contract.
     CurtaGolf internal curtaGolf;
 
+    /// @notice An incorrect solution to `MockCourse`.
+    IMockCourse internal mockSolutionIncorrect;
+
     /// @notice A mock Curta Golf Course.
     ICourse internal mockCourse;
+
+    /// @notice A solution to `MockCourse`.
+    IMockCourse internal mockSolution;
 
     /// @notice The Par contract.
     Par internal par;
@@ -132,19 +155,16 @@ contract BaseTest is Test {
         owner = makeAddr("owner");
         solver1 = makeAddr("solver1");
         solver2 = makeAddr("solver2");
+        solver3 = makeAddr("solver3");
         vm.label(owner, "Curta Golf owner");
         vm.label(solver1, "Solver 1");
         vm.label(solver2, "Solver 2");
-
-        // Deploy solutions to `MockCourse`.
-        /* MockCourseSolutionEfficient solutionEfficient = new MockCourseSolutionEfficient();
-        MockCourseSolutionInefficient solutionInefficient = new MockCourseSolutionInefficient();
-        efficientSolution = address(solutionEfficient).code;
-        inefficientSolution = address(solutionInefficient).code; */
+        vm.label(solver3, "Solver 3");
     }
 
     /// @notice Deploys an instance of `CurtaGolf`, `MockCourse`, `Par`,
-    /// `PurityChecker`, and adds `MockCourse` to `CurtaGolf` as `owner`.
+    /// `PurityChecker`, and adds `MockCourse` to `CurtaGolf` as `owner` with
+    /// every opcode allowed.
     function setUp() public {
         // Transaction #1.
         purityChecker = new PurityChecker();
@@ -152,7 +172,7 @@ contract BaseTest is Test {
         // Curta Golf will be deployed on transaction #3, and Par will be
         // deployed on transaction #2.
         address curtaGolfAddress = LibRLP.computeAddress(address(this), 3);
-        address parAddress = LibRLP.computeAddress(address(this), 2);
+        // address parAddress = LibRLP.computeAddress(address(this), 2);
 
         // Transaction #2: Deploy Par.
         par = new Par(curtaGolfAddress);
@@ -164,13 +184,21 @@ contract BaseTest is Test {
         // Transfer ownership of Curta Golf to `owner`.
         curtaGolf.transferOwnership(owner);
 
-        // Add the mock course to Curta Golf.
+        // Add the mock course to Curta Golf with every opcode allowed.
         vm.prank(owner);
-        curtaGolf.addCourse(mockCourse);
+        curtaGolf.addCourse(mockCourse, type(uint256).max);
+
+        // Deploy an instance of `MockCourseSolutionIncorrect`.
+        mockSolutionIncorrect = new MockCourseSolutionIncorrect();
+
+        // Deploy an instance of `MockCourseSolutionEfficient`.
+        mockSolution = new MockCourseSolutionEfficient();
 
         // Label addresses.
         vm.label(address(par), "`Par`");
         vm.label(address(curtaGolf), "`CurtaGolf`");
         vm.label(address(mockCourse), "`MockCourse`");
+        vm.label(address(mockSolutionIncorrect), "`MockSolutionIncorrect`");
+        vm.label(address(mockSolution), "`MockSolutionEfficient`");
     }
 }
