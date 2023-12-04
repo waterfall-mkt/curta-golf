@@ -129,9 +129,9 @@ interface ICurtaGolf {
     /// would be `1 << 95`. To check if some opcode `opcode` is allowed,
     /// `(bitmap >> opcode) & 1` must be `1`.
     /// @param _id The ID of the course.
-    /// @return _opcodeBitmap A bitmap, where a 1 at the LSb position equal to
-    /// the opcode's value indicates that the opcode is allowed.
-    function getAllowedOpcodes(uint32 _id) external view returns (uint256 _opcodeBitmap);
+    /// @return A bitmap, where a 1 at the LSb position equal to the opcode's
+    /// value indicates that the opcode is allowed.
+    function getAllowedOpcodes(uint32 _id) external view returns (uint256);
 
     /// @param _key The key of the commit.
     /// @return player The address of the player (i.e. the address that is
@@ -155,7 +155,9 @@ interface ICurtaGolf {
 
     /// @notice Adds a course to the contract.
     /// @param _course The address of the course.
-    /// @param _allowedOpcodes The bitmap of allowed opcodes.
+    /// @param _allowedOpcodes The bitmap of allowed opcodes, where a 1 at the
+    /// LSb position equal to the opcode's value indicates the opcode is
+    /// allowed.
     function addCourse(ICourse _course, uint256 _allowedOpcodes) external;
 
     /// @notice Commits a solution to a course to prevent front-running.
@@ -169,7 +171,9 @@ interface ICurtaGolf {
     /// @notice Sets the allowed opcodes for a course.
     /// @dev Can only be called after the course has been added.
     /// @param _courseId The ID of the course.
-    /// @param _allowedOpcodes The bitmap of allowed opcodes.
+    /// @param _allowedOpcodes The bitmap of allowed opcodes, where a 1 at the
+    /// LSb position equal to the opcode's value indicates the opcode is
+    /// allowed.
     function setAllowedOpcodes(uint32 _courseId, uint256 _allowedOpcodes) external;
 
     /// @notice Sets a new purity checker.
