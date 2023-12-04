@@ -165,7 +165,7 @@ contract BaseTest is Test {
     /// @notice Deploys an instance of `CurtaGolf`, `MockCourse`, `Par`,
     /// `PurityChecker`, and adds `MockCourse` to `CurtaGolf` as `owner` with
     /// every opcode allowed.
-    function setUp() public {
+    function setUp() public virtual {
         // Transaction #1.
         purityChecker = new PurityChecker();
 
