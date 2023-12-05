@@ -4,7 +4,6 @@ pragma solidity ^0.8.21;
 import { BaseTest } from "./utils/BaseTest.sol";
 
 contract PurityCheckerTest is BaseTest {
-
     /// @notice Opcodes allowed for the `MockCourse`.
     /// Impure opcode table from: https://blog.sigmaprime.io/evm-purity.html
     /// ________________________________________________________________________
@@ -31,10 +30,11 @@ contract PurityCheckerTest is BaseTest {
     /// | 0xfa | STATICCALL
     /// | 0xff | SELFDESTRUCT
     /// |_______________________________________________________________________
-    uint256 internal immutable opcodeBitmap =
-        generateBitmap(hex"000102030405060708090a0b_101112131415161718191a1b1c1d_20_303132333435363738393a3d3e_404142434445464748_5051525354565758595a5b_5f606162636465666768696a6b6c6d6e6f_707172737475767778797a7b7c7d7e7f_808182838485868788898a8b8c8d8e8f_909192939495969798999a9b9c9d9e9f_f3fdfe");
+    uint256 internal immutable opcodeBitmap = generateBitmap(
+        hex"000102030405060708090a0b101112131415161718191a1b1c1d20303132333435363738393a3d3e4041424344454647485051525354565758595a5b5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9ff3fdfe"
+    );
 
-    /// @notice For this test we will set the `allowedOpcodes` for the first 
+    /// @notice For this test we will set the `allowedOpcodes` for the first
     /// course to the value of `opcodeBitmap` so we can test with some bits
     /// set to 0.
     function setUp() public override {
@@ -78,8 +78,11 @@ contract PurityCheckerTest is BaseTest {
     /// correctly checks the bytecode against the bitmap.
     function test_customBitmap() public {
         // Here we allow opcodes 0x00, 0x20, and 0xFE.
-        uint256 bitmap = generateBitmap(hex"00_20_fe");
-        assertEq(bitmap, 28948022309329048855892746252171976963317496166410141009864396001982577377281);
+        uint256 bitmap = generateBitmap(hex"0020fe");
+        assertEq(
+            bitmap,
+            28_948_022_309_329_048_855_892_746_252_171_976_963_317_496_166_410_141_009_864_396_001_982_577_377_281
+        );
         assertTrue(purityChecker.check(hex"", bitmap));
         assertTrue(purityChecker.check(hex"00", bitmap));
         assertTrue(purityChecker.check(hex"20", bitmap));

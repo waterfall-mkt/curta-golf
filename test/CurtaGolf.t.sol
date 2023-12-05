@@ -199,7 +199,7 @@ contract CurtaGolfTest is BaseTest {
         vm.expectEmit(true, true, true, true);
         emit Transfer(address(0), solver1, (1 << 160) | uint256(uint160(solver1)));
         vm.expectEmit(true, true, false, false);
-        emit SubmitSolution(1, solver1, address(0));
+        emit SubmitSolution(1, solver1, address(0), 0);
         curtaGolf.submit(1, INEFFICIENT_SOLUTION, solver1, 0);
 
         // Check that there is 1 King and 1 solution for course 1.
@@ -231,7 +231,7 @@ contract CurtaGolfTest is BaseTest {
         vm.expectEmit(true, true, true, true);
         emit Transfer(address(0), solver2, (1 << 160) | uint256(uint160(solver2)));
         vm.expectEmit(true, true, false, false);
-        emit SubmitSolution(1, solver2, address(0));
+        emit SubmitSolution(1, solver2, address(0), 0);
         curtaGolf.submit(1, EFFICIENT_SOLUTION, solver2, 0);
 
         // Check that there is 2 Kings and 2 solutions for course 1.
@@ -260,7 +260,7 @@ contract CurtaGolfTest is BaseTest {
         vm.expectEmit(true, true, true, true);
         emit Transfer(address(0), solver3, (1 << 160) | uint256(uint160(solver3)));
         vm.expectEmit(true, true, false, false);
-        emit SubmitSolution(1, solver3, address(0));
+        emit SubmitSolution(1, solver3, address(0), 0);
         curtaGolf.submit(1, INEFFICIENT_SOLUTION, solver3, 0);
 
         // Check that there is 2 Kings and 3 solutions for course 1.
@@ -328,7 +328,7 @@ contract CurtaGolfTest is BaseTest {
         vm.expectEmit(true, true, true, true);
         emit Transfer(address(0), solver1, (1 << 160) | uint256(uint160(solver1)));
         vm.expectEmit(true, true, false, false);
-        emit SubmitSolution(1, solver1, address(0));
+        emit SubmitSolution(1, solver1, address(0), 0);
         curtaGolf.submitDirectly(1, INEFFICIENT_SOLUTION, solver1);
 
         // Check that there is 1 King and 1 solution for course 1.
@@ -360,7 +360,7 @@ contract CurtaGolfTest is BaseTest {
         vm.expectEmit(true, true, true, true);
         emit Transfer(address(0), solver2, (1 << 160) | uint256(uint160(solver2)));
         vm.expectEmit(true, true, false, false);
-        emit SubmitSolution(1, solver2, address(0));
+        emit SubmitSolution(1, solver2, address(0), 0);
         curtaGolf.submitDirectly(1, EFFICIENT_SOLUTION, solver2);
 
         // Check that there is 2 Kings and 2 solutions for course 1.
@@ -389,7 +389,7 @@ contract CurtaGolfTest is BaseTest {
         vm.expectEmit(true, true, true, true);
         emit Transfer(address(0), solver3, (1 << 160) | uint256(uint160(solver3)));
         vm.expectEmit(true, true, false, false);
-        emit SubmitSolution(1, solver3, address(0));
+        emit SubmitSolution(1, solver3, address(0), 0);
         curtaGolf.submitDirectly(1, INEFFICIENT_SOLUTION, solver3);
 
         // Check that there is 2 Kings and 3 solutions for course 1.
