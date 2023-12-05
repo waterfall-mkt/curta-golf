@@ -32,11 +32,7 @@ contract PurityChecker is IPurityChecker {
                 // bit in `_allowedOpcodes` is `0`). Since `ret` is set to `0`,
                 // or `false`, by default, this correctly results in `check`
                 // returning `false` if the contract is not pure.
-                for {
-                    let i := offset
-                } lt(offset, end) {
-                    offset := add(offset, 1)
-                } {
+                for { let i := offset } lt(offset, end) { offset := add(offset, 1) } {
                     let opcode := byte(0, mload(offset))
                     // If the opcode is not allowed, the contract is not pure.
                     if iszero(and(shr(opcode, bitmap), 1)) { leave }

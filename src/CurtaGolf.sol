@@ -181,7 +181,9 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
         if (address(courseData.course) == address(0)) revert CourseDoesNotExist(_courseId);
 
         // Revert if the solution contains invalid opcodes.
-        if (!purityChecker.check(_solution, getAllowedOpcodes[_courseId])) revert PollutedSolution();
+        if (!purityChecker.check(_solution, getAllowedOpcodes[_courseId])) {
+            revert PollutedSolution();
+        }
 
         // Deploy the solution.
         address target;
@@ -225,7 +227,7 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
         par.upmint(_recipient, _courseId, gasUsed);
 
         // Emit event.
-        emit SubmitSolution(_courseId, _recipient, target);
+        emit SubmitSolution(_courseId, _recipient, target, gasUsed);
     }
 
     // -------------------------------------------------------------------------

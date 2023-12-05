@@ -71,8 +71,9 @@ contract BaseTest is Test {
     /// @param courseId The ID of the course.
     /// @param recipient The address of the recipient.
     /// @param target The address of the deployed solution.
+    /// @param gasUsed The amount of gas used.
     event SubmitSolution(
-        uint32 indexed courseId, address indexed recipient, address indexed target
+        uint32 indexed courseId, address indexed recipient, address target, uint32 indexed gasUsed
     );
 
     /// @notice Emitted when a course gets a new King.
