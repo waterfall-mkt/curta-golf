@@ -189,8 +189,10 @@ interface ICurtaGolf {
     /// @param _solution The bytecode of the solution.
     /// @param _recipient The address of the recipient.
     /// @param _salt The salt used to generate the key of the commit.
+    /// @return The gas used by the solution.
     function submit(uint32 _courseId, bytes memory _solution, address _recipient, uint256 _salt)
-        external;
+        external
+        returns (uint32);
 
     /// @notice Submits a solution to a course directly, skipping the 2-step
     /// commit-reveal process. Only call this function if front-running is not
@@ -198,6 +200,8 @@ interface ICurtaGolf {
     /// @param _courseId The ID of the course.
     /// @param _solution The bytecode of the solution.
     /// @param _recipient The address of the recipient.
+    /// @return The gas used by the solution.
     function submitDirectly(uint32 _courseId, bytes memory _solution, address _recipient)
-        external;
+        external
+        returns (uint32);
 }

@@ -90,6 +90,7 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
     /// @inheritdoc ICurtaGolf
     function submit(uint32 _courseId, bytes memory _solution, address _recipient, uint256 _salt)
         external
+        returns (uint32)
     {
         // Compute key.
         bytes32 key = keccak256(abi.encode(msg.sender, _solution, _salt));
@@ -105,14 +106,15 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
             }
         }
 
-        _submit(_courseId, _solution, _recipient);
+        return _submit(_courseId, _solution, _recipient);
     }
 
     /// @inheritdoc ICurtaGolf
     function submitDirectly(uint32 _courseId, bytes memory _solution, address _recipient)
         external
+        returns (uint32)
     {
-        _submit(_courseId, _solution, _recipient);
+        return _submit(_courseId, _solution, _recipient);
     }
 
     // -------------------------------------------------------------------------
@@ -174,7 +176,11 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
     /// @param _courseId The ID of the course.
     /// @param _solution The bytecode of the solution.
     /// @param _recipient The address of the recipient.
-    function _submit(uint32 _courseId, bytes memory _solution, address _recipient) internal {
+    /// @return The gas used by the solution.
+    function _submit(uint32 _courseId, bytes memory _solution, address _recipient)
+        internal
+        returns (uint32)
+    {
         CourseData memory courseData = getCourse[_courseId];
 
         // Revert if the course does not exist.
@@ -228,6 +234,9 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
 
         // Emit event.
         emit SubmitSolution(_courseId, _recipient, target, gasUsed);
+
+        // Return gas used.
+        return gasUsed;
     }
 
     // -------------------------------------------------------------------------
