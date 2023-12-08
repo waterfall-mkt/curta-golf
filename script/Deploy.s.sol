@@ -37,7 +37,7 @@ contract Deploy is Script {
         // Deploy `Par`.
         par = new Par(curtaGolfAddress);
 
-        // Deploy `GurtaGolf`.
+        // Deploy `CurtaGolf`.
         curtaGolf = new CurtaGolf(par, purityChecker);
 
         // create2Factory.call(abi.encodeWithSignature(
