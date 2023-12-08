@@ -26,10 +26,10 @@ contract MockCourse is ICourse {
             // Verify solution.
             if (c != a + b) revert IncorrectSolution();
         }
-        
-        // return gas usage
+
+        // Return gas usage.
         return uint32(start - gasleft());
-}
+    }
 }
 
 /// @title The interface for `MockCourse`, a mock Curta Golf Course for testing
