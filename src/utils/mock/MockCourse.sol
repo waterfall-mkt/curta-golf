@@ -12,7 +12,9 @@ contract MockCourse is ICourse {
     }
 
     /// @inheritdoc ICourse
-    function run(address _target, uint256 _seed) external pure {
+    function run(address _target, uint256 _seed) external view returns (uint32) {
+        uint256 start = gasleft();
+
         // Generate inputs from `_seed`.
         uint256 a = _seed >> 128;
         uint256 b = _seed & 0xffffffffffffffffffffffffffffffff;
@@ -24,7 +26,10 @@ contract MockCourse is ICourse {
             // Verify solution.
             if (c != a + b) revert IncorrectSolution();
         }
-    }
+        
+        // return gas usage
+        return uint32(start - gasleft());
+}
 }
 
 /// @title The interface for `MockCourse`, a mock Curta Golf Course for testing
