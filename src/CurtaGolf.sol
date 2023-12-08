@@ -198,9 +198,7 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
         }
 
         // Run solution and mint NFT if it beats the leading score.
-        uint256 start = gasleft();
-        courseData.course.run(target, block.prevrandao);
-        uint32 gasUsed = uint32(start - gasleft());
+        uint32 gasUsed = courseData.course.run(target, block.prevrandao);
         if (courseData.gasUsed == 0 || gasUsed < courseData.gasUsed) {
             // Update course's leading score.
             courseData.gasUsed = gasUsed;
