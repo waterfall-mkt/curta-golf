@@ -23,7 +23,7 @@ contract Deploy is Script {
     PurityChecker public purityChecker;
 
     /// @notice The expected address of the deployed `CurtaGolf` contract.
-    address curtaGolfAddress =0x8936272ebecc127D21BdC0DbD35978DC7bB7F358;
+    address curtaGolfAddress = 0x8936272ebecc127D21BdC0DbD35978DC7bB7F358;
 
     /// @notice Address of the create2 factory to use
     address create2Factory = 0x0000000000FFe8B47B3e2130213B802212439497;
