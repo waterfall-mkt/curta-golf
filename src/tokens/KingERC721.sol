@@ -43,7 +43,7 @@ abstract contract KingERC721 {
     // -------------------------------------------------------------------------
 
     /// @param owner The owner of the token.
-    /// @param metadata The last 96 bits (LSb) of the corresponding Course's
+    /// @param metadata The last 96 bits (LSb) of the corresponding course's
     /// King's address.
     struct TokenData {
         address owner;
@@ -68,7 +68,7 @@ abstract contract KingERC721 {
     mapping(address => uint256) internal _balanceOf;
 
     /// @notice A mapping of token IDs to token data, which contains the owner
-    /// of the token and the last 96 bits (LSb) of the corresponding Course's
+    /// of the token and the last 96 bits (LSb) of the corresponding course's
     /// King address.
     mapping(uint256 => TokenData) internal _tokenData;
 
@@ -310,7 +310,7 @@ abstract contract KingERC721 {
     /// exists.
     /// @param _id The ID of the token.
     /// @return tokenData A struct containing the owner of the token and the
-    /// last 96 bits (LSb) of the corresponding Course's King's address in the
+    /// last 96 bits (LSb) of the corresponding course's King's address in the
     /// shape `{ owner: address, metadata: uint96 }`.
     function getTokenData(uint256 _id) external view returns (TokenData memory tokenData) {
         require((tokenData = _tokenData[_id]).owner != address(0), "NOT_MINTED");

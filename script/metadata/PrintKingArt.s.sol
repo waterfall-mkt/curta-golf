@@ -15,7 +15,7 @@ contract PrintKingArtScript is BaseTest, Script {
     function setUp() public override {
         super.setUp();
 
-        // Submit a solution to Course #1 as `fiveoutofnine.eth`.
+        // Submit a solution to course #1 as `fiveoutofnine.eth`.
         curtaGolf.submitDirectly(1, EFFICIENT_SOLUTION, 0xA85572Cd96f1643458f17340b6f0D6549Af482F5);
     }
     // -------------------------------------------------------------------------

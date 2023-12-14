@@ -10,7 +10,6 @@ import { Perlin } from "src/utils/Perlin.sol";
 /// @dev Must be compiled with `--via-ir` to avoid stack too deep errors.
 /// @author fiveoutofnine
 library KingArt {
-    using LibString for address;
     using LibString for string;
     using LibString for uint256;
 
@@ -303,6 +302,11 @@ library KingArt {
 
     /// @notice Renders a Curta Golf King NFT SVG.
     /// @param _id The token ID of the Curta Golf King NFT.
+    /// @param _metadata The last 96 bits (LSb) of the corresponding course's
+    /// King's address.
+    /// @param _solves The number of solves for the corresponding course.
+    /// @param _gasUsed The amount of gas used by the leading solution on the
+    /// course.
     function render(uint256 _id, uint96 _metadata, uint32 _solves, uint32 _gasUsed)
         public
         pure
