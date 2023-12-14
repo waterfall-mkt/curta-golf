@@ -209,7 +209,7 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
             courseData.gasUsed = gasUsed;
 
             // Mint or force transfer NFT to `_recipient`.
-            if (_ownerOf[_courseId] == address(0)) {
+            if (_tokenData[_courseId].owner == address(0)) {
                 _mint(_recipient, _courseId);
             } else {
                 _forceTransfer(_recipient, _courseId);
@@ -248,7 +248,7 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
 
     /// @inheritdoc KingERC721
     function tokenURI(uint256 _id) public view override returns (string memory) {
-        require(_ownerOf[_id] != address(0), "NOT_MINTED");
+        require(_tokenData[_id].owner != address(0), "NOT_MINTED");
 
         CourseData memory courseData = getCourse[uint32(_id)];
 
@@ -266,8 +266,7 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
                     '.","image_data": "data:image/svg+xml;base64,',
                     KingArt.render({
                         _id: _id,
-                        // TODO: replace with actual king's 28 bits
-                        _king: 0xA85572Cd96f1643458f17340b6f0D6549Af482F5,
+                        _metadata: _tokenData[_id].metadata,
                         _solves: courseData.solutionCount,
                         _gasUsed: courseData.gasUsed
                     }),

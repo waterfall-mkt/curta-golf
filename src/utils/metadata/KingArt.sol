@@ -303,8 +303,8 @@ library KingArt {
 
     /// @notice Renders a Curta Golf King NFT SVG.
     /// @param _id The token ID of the Curta Golf King NFT.
-    function render(uint256 _id, address _king, uint32 _solves, uint32 _gasUsed)
-        internal
+    function render(uint256 _id, uint96 _metadata, uint32 _solves, uint32 _gasUsed)
+        public
         pure
         returns (string memory)
     {
@@ -320,7 +320,7 @@ library KingArt {
             '24 24" fill="none"><path d="M18 20a6 6 0 0 0-12 0"/><circle cx="12'
             '" cy="10" r="4"/><circle cx="12" cy="12" r="10"/></svg><div class='
             '"a e"><div class="b">',
-            _formatAddress(_king),
+            _formatValueAsAddress(_metadata >> 68),
             '</div><div class="c">King</div></div></div><div class="a d"><svg x'
             'mlns="http://www.w3.org/2000/svg" width="40" height="48" viewBox="'
             '0 0 24 24" fill="none"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4'
@@ -538,16 +538,15 @@ library KingArt {
         return Perlin.computePerlin(_x, _y, _seed, 10);
     }
 
-    /// @notice A helper function to format the last 28 bits (LSb) of an address
-    /// to a hex-string of length 7.
-    /// @param _address The address to format.
+    /// @notice A helper function to format a 28 bit value as a hex-string of
+    /// length 7. If the value is less than 24 bits, it is padded with leading
+    /// zeros.
+    /// @param _value The value to format.
     /// @return The formatted string.
-    function _formatAddress(address _address) internal pure returns (string memory) {
-        uint256 value = uint160(_address) >> 132;
-
+    function _formatValueAsAddress(uint256 _value) internal pure returns (string memory) {
         return string.concat(
-            string(abi.encodePacked(bytes32("0123456789ABCDEF")[(value >> 24) & 0xF])),
-            (value & 0xFFFFFF).toHexStringNoPrefix(3).toCase(true)
+            string(abi.encodePacked(bytes32("0123456789ABCDEF")[(_value >> 24) & 0xF])),
+            (_value & 0xFFFFFF).toHexStringNoPrefix(3).toCase(true)
         );
     }
 

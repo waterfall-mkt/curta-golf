@@ -16,11 +16,13 @@ contract PrintKingArtScript is Script {
 
     /// @notice Prints a sample King NFT art generation.
     function run() public view {
-        console.log(KingArt.render({
-            _id: 1,
-            _king: 0xA85572Cd96f1643458f17340b6f0D6549Af482F5,
-            _solves: 112348923,
-            _gasUsed: 4354
-        }));
+        console.log(
+            KingArt.render({
+                _id: 1,
+                _metadata: uint96(uint160(0xA85572Cd96f1643458f17340b6f0D6549Af482F5) >> 64),
+                _solves: 112_348_923,
+                _gasUsed: 4354
+            })
+        );
     }
 }
