@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.21;
 
+import { Base64 } from "solady/utils/Base64.sol";
+import { LibString } from "solady/utils/LibString.sol";
 import { Owned } from "solmate/auth/Owned.sol";
 
 import { Par } from "./Par.sol";
@@ -8,6 +10,7 @@ import { ICourse } from "./interfaces/ICourse.sol";
 import { ICurtaGolf } from "./interfaces/ICurtaGolf.sol";
 import { IPurityChecker } from "./interfaces/IPurityChecker.sol";
 import { KingERC721 } from "./tokens/KingERC721.sol";
+import { KingArt } from "./utils/metadata/KingArt.sol";
 
 /// @title Curta Golf
 /// @author fiveoutofnine
@@ -20,6 +23,8 @@ import { KingERC721 } from "./tokens/KingERC721.sol";
 /// are not the leading solution (see {Par}; note: max 1 Par NFT per (course,
 /// solver) pair).
 contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
+    using LibString for uint256;
+
     // -------------------------------------------------------------------------
     // Constants
     // -------------------------------------------------------------------------
@@ -245,6 +250,30 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
     function tokenURI(uint256 _id) public view override returns (string memory) {
         require(_ownerOf[_id] != address(0), "NOT_MINTED");
 
-        return "TODO";
+        CourseData memory courseData = getCourse[uint32(_id)];
+
+        return string.concat(
+            "data:json/application;base64,",
+            Base64.encode(
+                abi.encodePacked(
+                    '{"name":"Curta Golf King #',
+                    _id.toString(),
+                    " - ",
+                    courseData.course.name(),
+                    '","description":"This token represents the gas-golfing \"K'
+                    'ing of the Hill\" to Curta Golf Course #',
+                    _id.toString(),
+                    '.","image_data": "data:image/svg+xml;base64,',
+                    KingArt.render({
+                        _id: _id,
+                        // TODO: replace with actual king's 28 bits
+                        _king: 0xA85572Cd96f1643458f17340b6f0D6549Af482F5,
+                        _solves: courseData.solutionCount,
+                        _gasUsed: courseData.gasUsed
+                    }),
+                    '"}'
+                )
+            )
+        );
     }
 }
