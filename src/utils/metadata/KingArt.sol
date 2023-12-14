@@ -10,6 +10,8 @@ import { Perlin } from "src/utils/Perlin.sol";
 /// @dev Must be compiled with `--via-ir` to avoid stack too deep errors.
 /// @author fiveoutofnine
 library KingArt {
+    using LibString for address;
+    using LibString for string;
     using LibString for uint256;
 
     // -------------------------------------------------------------------------
@@ -26,6 +28,140 @@ library KingArt {
     /// @notice The number of tiles tall the map is.
     /// @dev Changing this from `17` may break the script.
     uint256 constant HEIGHT = 17;
+
+    /// @notice Starting string for the SVG.
+    string constant SVG_START =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" vie'
+        'wBox="0 0 1024 1024" fill="none"><style>@font-face{font-family:A;src:u'
+        "rl(data:font/woff2;utf-8;base64,d09GMgABAAAAAA4gABAAAAAAHHQAAA3CAAEAAA"
+        "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"
+        "jR+JD+r3al8q/xP+dNlAAAAA==)}@font-face{font-family:B;src:url(data:font"
+        "/woff2;utf-8;base64,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)}div.a{disp"
+        "lay:flex}div.b{font-family:A;font-size:40px;line-height:48px;color:#c1"
+        "cdd9;letter-spacing:-.05em}div.c{font-family:B;line-height:1;font-size"
+        ":24px;color:#758195}div.d{gap:16px}div.e{flex-direction:column;align-i"
+        "tems:start}text,tspan{dominant-baseline:central;font-size:40px;line-he"
+        "ight:48px}.a{font-family:A;letter-spacing:-.05em;fill:#F0F6FC;}.b{font"
+        '-family:B;fill:#94A3B3}</style><path d="M0 0h1024v1024H0z" fill="#1216'
+        '1F"/><g fill="#0D1017"><path d="M0 0h1024v40H0zm0 984h1024v40H0z"/><pa'
+        'th d="M0 0h40v1024H0zm984 0h40v1024h-40z"/></g><g stroke="#27303D" str'
+        'oke-width="2"><path d="M0 40h1024M0 984h1024M40 0v1024M984 0v1024"/><p'
+        'ath d="M88 208v600q0 24 24 24h800q24 0 24-24V208q0-24-24-24H112q-24 0-'
+        '24 24z" fill="#181E28"/><path d="M88 96v48q0 8 8 8h48q8 0 8-8V96q0-8-8'
+        '-8H96q-8 0-8 8z" fill="#000"/></g><g fill="#94A3B3" transform="transla'
+        'te(104 102)"><rect width="8" height="26" rx="4"/><circle cx="4" cy="32'
+        '" r="4"/><rect x="12" width="8" height="12" rx="4"/><circle cx="16" cy'
+        '="18" r="4"/><rect x="12" y="24" width="8" height="12" rx="4"/><circle'
+        ' cx="28" cy="4" r="4"/><rect x="24" y="10" width="8" height="26" rx="4'
+        '"/></g><text x="172" y="120"><tspan class="a">Curta</tspan><tspan clas'
+        's="b"> | Golf</tspan></text><g transform="matrix(5.12 0 0 5.12 192 228'
+        '.96)">';
 
     /// @notice Starting string for the island's SVG.
     /// @dev The island's SVG's width and height are computed to perfectly
@@ -161,19 +297,47 @@ library KingArt {
         'v1H6zM5 8h1v1H5zm3 0h1v1H8z" fill="#338839"/></g></g><g transform="rot'
         'ate(180 62.5 54.5)">';
 
-    /// @notice Ending string for the island's SVG
-    string constant ISLAND_SVG_END = "</g></svg>";
-
     // -------------------------------------------------------------------------
     // `render` and `_renderIsland`
     // -------------------------------------------------------------------------
 
     /// @notice Renders a Curta Golf King NFT SVG.
     /// @param _id The token ID of the Curta Golf King NFT.
-    function render(uint256 _id) internal pure returns (string memory) {
+    function render(uint256 _id, address _king, uint32 _solves, uint32 _gasUsed)
+        internal
+        pure
+        returns (string memory)
+    {
         uint32 seed = uint32(uint256(keccak256(abi.encodePacked(_id))));
 
-        return _renderIsland(seed);
+        return string.concat(
+            SVG_START,
+            _renderIsland(seed),
+            '</g><foreignObject x="88" y="864" width="848" height="72" stroke="'
+            '#758195" stroke-width="2" stroke-linecap="round" stroke-linejoin="'
+            'round"><div class="a" style="gap:40px"><div class="a d"><svg xmlns'
+            '="http://www.w3.org/2000/svg" width="40" height="48" viewBox="0 0 '
+            '24 24" fill="none"><path d="M18 20a6 6 0 0 0-12 0"/><circle cx="12'
+            '" cy="10" r="4"/><circle cx="12" cy="12" r="10"/></svg><div class='
+            '"a e"><div class="b">',
+            _formatAddress(_king),
+            '</div><div class="c">King</div></div></div><div class="a d"><svg x'
+            'mlns="http://www.w3.org/2000/svg" width="40" height="48" viewBox="'
+            '0 0 24 24" fill="none"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4'
+            ' 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 '
+            '4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><pat'
+            'h d="m9 12 2 2 4-4"/></svg><div class="a e"><div class="b">',
+            _formatNumber(_solves),
+            '</div><div class="c">Solves</div></div></div><div class="a d"><svg'
+            ' xmlns="http://www.w3.org/2000/svg" width="40" height="48" viewBox'
+            '="0 0 24 24" fill="none"><path d="M3 22h12M4 9h10m0 13V4a2 2 0 0 0'
+            '-2-2H6a2 2 0 0 0-2 2v18m10-9h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2h0a2 2'
+            ' 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42L18 5"/></svg><div class="a e"><'
+            'div class="b">',
+            _formatNumber(_gasUsed),
+            '</div><div class="c">Gas used</div></div></div></div></foreignObje'
+            'ct></svg>'
+        );
     }
 
     /// @notice A helper function to render the island's SVG for a given seed.
@@ -355,7 +519,7 @@ library KingArt {
         }
 
         // Return SVG string.
-        return string.concat(svg, ISLAND_SVG_END);
+        return string.concat(svg, "</g></svg>");
     }
 
     // -------------------------------------------------------------------------
@@ -372,5 +536,34 @@ library KingArt {
     /// @return The noise value at (`_x`, `_y`).
     function _noise(uint32 _x, uint32 _y, uint32 _seed) internal pure returns (uint256) {
         return Perlin.computePerlin(_x, _y, _seed, 10);
+    }
+
+    /// @notice A helper function to format the last 28 bits (LSb) of an address
+    /// to a hex-string of length 7.
+    /// @param _address The address to format.
+    /// @return The formatted string.
+    function _formatAddress(address _address) internal pure returns (string memory) {
+        uint256 value = uint160(_address) >> 132;
+
+        return string.concat(
+            string(abi.encodePacked(bytes32("0123456789ABCDEF")[(value >> 24) & 0xF])),
+            (value & 0xFFFFFF).toHexStringNoPrefix(3).toCase(true)
+        );
+    }
+
+    /// @notice A helper function to format a number with a `K` or `M` suffix if
+    /// it is greater than 1,000 or 1,000,000, respectively.
+    /// @param _value The value to format.
+    /// @return The formatted string.
+    function _formatNumber(uint256 _value) internal pure returns (string memory) {
+        if (_value < 1000) return _value.toString();
+        if (_value < 1_000_000) {
+            return string.concat(
+                (_value / 1000).toString(), ".", ((_value % 1000) / 100).toString(), "K"
+            );
+        }
+        return string.concat(
+            (_value / 1_000_000).toString(), ".", ((_value % 1_000_000) / 100_000).toString(), "M"
+        );
     }
 }

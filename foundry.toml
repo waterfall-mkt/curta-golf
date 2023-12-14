@@ -4,12 +4,12 @@ out = 'out'
 libs = ['lib']
 solc = "0.8.21"
 optimizer_runs = 1_000_000
+via_ir = true
 remappings = [
     'forge-std/=lib/forge-std/src/',
     'solady/=lib/solady/src/',
     'solmate/=lib/solmate/src/',
 ]
-
 
 [fmt]
 line_length = 100
