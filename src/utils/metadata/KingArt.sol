@@ -315,11 +315,11 @@ library KingArt {
             _renderIsland(seed),
             '</g><foreignObject x="88" y="864" width="848" height="72" stroke="'
             '#758195" stroke-width="2" stroke-linecap="round" stroke-linejoin="'
-            'round"><div class="a" style="gap:40px"><div class="a d"><svg xmlns'
-            '="http://www.w3.org/2000/svg" width="40" height="48" viewBox="0 0 '
-            '24 24" fill="none"><path d="M18 20a6 6 0 0 0-12 0"/><circle cx="12'
-            '" cy="10" r="4"/><circle cx="12" cy="12" r="10"/></svg><div class='
-            '"a e"><div class="b">',
+            'round"><div class="a" style="gap:40px" xmlns="http://www.w3.org/19'
+            '99/xhtml"><div class="a d"><svg xmlns="http://www.w3.org/2000/svg"'
+            ' width="40" height="48" viewBox="0 0 24 24" fill="none"><path d="M'
+            '18 20a6 6 0 0 0-12 0"/><circle cx="12" cy="10" r="4"/><circle cx="'
+            '12" cy="12" r="10"/></svg><div class="a e"><div class="b">',
             _formatValueAsAddress(_metadata >> 68),
             '</div><div class="c">King</div></div></div><div class="a d"><svg x'
             'mlns="http://www.w3.org/2000/svg" width="40" height="48" viewBox="'

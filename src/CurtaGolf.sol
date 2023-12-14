@@ -253,23 +253,27 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
         CourseData memory courseData = getCourse[uint32(_id)];
 
         return string.concat(
-            "data:json/application;base64,",
+            "data:application/json;base64,",
             Base64.encode(
                 abi.encodePacked(
                     '{"name":"Curta Golf King #',
                     _id.toString(),
                     " - ",
                     courseData.course.name(),
-                    '","description":"This token represents the gas-golfing \"K'
-                    'ing of the Hill\" to Curta Golf Course #',
+                    '","description":"This token represents the gas-golfing \\"'
+                    'King of the Hill\\" to Curta Golf Course #',
                     _id.toString(),
                     '.","image_data": "data:image/svg+xml;base64,',
-                    KingArt.render({
-                        _id: _id,
-                        _metadata: _tokenData[_id].metadata,
-                        _solves: courseData.solutionCount,
-                        _gasUsed: courseData.gasUsed
-                    }),
+                    Base64.encode(
+                        abi.encodePacked(
+                            KingArt.render({
+                                _id: _id,
+                                _metadata: _tokenData[_id].metadata,
+                                _solves: courseData.solutionCount,
+                                _gasUsed: courseData.gasUsed
+                            })
+                        )
+                    ),
                     '"}'
                 )
             )
