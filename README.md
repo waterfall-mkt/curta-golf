@@ -71,7 +71,7 @@ To generate a report, run the following command:
 forge coverage --report lcov
 ```
 
-> **Note**
+> [!NOTE]
 > It may be helpful to use an extension like [**Coverage Gutters**](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters) to display the coverage over the code.
 
 ## Acknowledgements
