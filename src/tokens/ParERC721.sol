@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.21;
 
-import { ERC721, ERC721TokenReceiver } from "solmate/tokens/ERC721.sol";
+import { ERC721TokenReceiver } from "solmate/tokens/ERC721.sol";
 
 /// @title The Curta Golf ``Par'' ERC-721 token contract
 /// @author fiveoutofnine

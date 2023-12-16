@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.21;
 
+import { Base64 } from "solady/utils/Base64.sol";
+import { LibString } from "solady/utils/LibString.sol";
+
 import { ParERC721 } from "./tokens/ParERC721.sol";
+import { ParArt } from "./utils/metadata/ParArt.sol";
 
 /// @title The Curta Golf ``Par'' NFT contract
 /// @author fiveoutofnine
@@ -14,6 +18,9 @@ import { ParERC721 } from "./tokens/ParERC721.sol";
 /// solver already has a token for the course, the token is updated with the
 /// new gas used if the new gas used is less than the old gas used.
 contract Par is ParERC721 {
+    using LibString for address;
+    using LibString for uint256;
+
     // -------------------------------------------------------------------------
     // Errors
     // -------------------------------------------------------------------------
@@ -75,6 +82,29 @@ contract Par is ParERC721 {
     function tokenURI(uint256 _id) public view override returns (string memory) {
         require(_tokenData[_id].owner != address(0), "NOT_MINTED");
 
-        return "TODO";
+        return string.concat(
+            "data:application/json;base64,",
+            Base64.encode(
+                abi.encodePacked(
+                    '{"name":"Curta Golf Course #',
+                    (_id >> 160).toString(),
+                    ' | Par","description":"This token represents ',
+                    address(uint160(_id)).toHexStringChecksummed(),
+                    "\'s solve to Curta Golf Course #",
+                    (_id >> 160).toString(),
+                    '.","image_data": "data:image/svg+xml;base64,',
+                    Base64.encode(
+                        abi.encodePacked(
+                            ParArt.render({ _id: _id, _gasUsed: _tokenData[_id].gasUsed })
+                        )
+                    ),
+                    '","attributes":[{"trait_type":"Course","value":"',
+                    (_id >> 160).toString(),
+                    '"},{"trait_type":"Solver","value":"',
+                    address(uint160(_id)).toHexStringChecksummed(),
+                    '"}]}'
+                )
+            )
+        );
     }
 }

@@ -78,7 +78,7 @@ contract PerlinNoiseTestScript is Script {
             for (uint256 row; row < HEIGHT; ++row) {
                 string memory ascii_row = "";
                 for (uint256 col; col < WIDTH; ++col) {
-                    // Normalize the Perlin noise values to the range [0, 60].
+                    // Normalize the Perlin noise values to the range [0, 59].
                     uint256 temperature = 60 * (perlin1[col][row] - min1) / range1;
                     uint256 rainfall = 60 * (perlin2[col][row] - min2) / range2;
 
