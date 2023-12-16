@@ -1,6 +1,6 @@
 <img align="right" width="150" height="150" top="100" src="./assets/curta-golf.webp">
 
-# Curta
+# Curta Golf
 [**Website**](https://curta.wtf?tab=golf) - [**Docs**](https://curta.wtf/docs/golf/overview) - [**Twitter**](https://twitter.com/curta_ctf)
 
 A king-of-the-hill style competition, where players optimize gas challenges.
