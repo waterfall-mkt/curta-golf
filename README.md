@@ -23,15 +23,15 @@ The goal of players is to view [**Courses**](https://github.com/waterfall-mkt/cu
             <td rowspan="3">Base</td>
             <td rowspan="3">8453</td>
             <td><code><a href="https://github.com/waterfall-mkt/curta-golf/blob/1449e59227a30ca720c04785339406515a0a2fea/src/CurtaGolf.sol">CurtaGolf</a></code></td>
-            <td><code><a href="https://basescan.org/address/0x537b3D527Ef128Bbb9A7d4fD68A40BA1122ff9D3">0x537b3D527Ef128Bbb9A7d4fD68A40BA1122ff9D3</code></td>
+            <td><code><a href="https://basescan.org/address/0xb8d97B24935C70cD931bbc6150e2596570997cE9">0xb8d97B24935C70cD931bbc6150e2596570997cE9</code></td>
         </tr>
         <tr>
             <td><code><a href="https://github.com/waterfall-mkt/curta-golf/blob/1449e59227a30ca720c04785339406515a0a2fea/src/Par.sol">Par</a></code></td>
-            <td><code><a href="https://basescan.org/address/0x33387c2bd677e716a42AAeE357dD77f3b733Ae85">0x33387c2bd677e716a42AAeE357dD77f3b733Ae85</code></td>
+            <td><code><a href="https://basescan.org/address/ 0x6B780314f95452E37D88A2F950Bbd3885851fD10"> 0x6B780314f95452E37D88A2F950Bbd3885851fD10</code></td>
         </tr>
         <tr>
             <td><code><a href="https://github.com/waterfall-mkt/curta-golf/blob/1449e59227a30ca720c04785339406515a0a2fea/src/utils/PurityChecker.sol">PurityChecker</a></code></td>
-            <td><code><a href="https://basescan.org/address/ 0xE03Bbdb59444581f54f6823F0091FdF738E3Ce62"> 0xE03Bbdb59444581f54f6823F0091FdF738E3Ce62</code></td>
+            <td><code><a href="https://basescan.org/address/0xE03Bbdb59444581f54f6823F0091FdF738E3Ce62">0xE03Bbdb59444581f54f6823F0091FdF738E3Ce62</code></td>
         </tr>
     </tbody>
 <table>
