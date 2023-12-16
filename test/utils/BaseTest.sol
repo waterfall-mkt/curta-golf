@@ -133,7 +133,7 @@ contract BaseTest is Test {
     /// @notice An incorrect solution to `MockCourse`.
     IMockCourse internal mockSolutionIncorrect;
 
-    /// @notice A mock Curta Golf Course.
+    /// @notice A mock Curta Golf course.
     ICourse internal mockCourse;
 
     /// @notice A solution to `MockCourse`.

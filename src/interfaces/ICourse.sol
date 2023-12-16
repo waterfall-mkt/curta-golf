@@ -28,5 +28,6 @@ interface ICourse {
     /// contract.
     /// @param _target The address of contract with the solution to run.
     /// @param _seed The seed used to generate the inputs for the solution.
-    function run(address _target, uint256 _seed) external pure;
+    /// @return The amount of gas consumed by the solution.
+    function run(address _target, uint256 _seed) external view returns (uint32);
 }
