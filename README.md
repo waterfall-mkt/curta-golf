@@ -27,7 +27,7 @@ The goal of players is to view [**Courses**](https://github.com/waterfall-mkt/cu
         </tr>
         <tr>
             <td><code><a href="https://github.com/waterfall-mkt/curta-golf/blob/1449e59227a30ca720c04785339406515a0a2fea/src/Par.sol">Par</a></code></td>
-            <td><code><a href="https://basescan.org/address/ 0x6B780314f95452E37D88A2F950Bbd3885851fD10"> 0x6B780314f95452E37D88A2F950Bbd3885851fD10</code></td>
+            <td><code><a href="https://basescan.org/address/0x6B780314f95452E37D88A2F950Bbd3885851fD10">0x6B780314f95452E37D88A2F950Bbd3885851fD10</code></td>
         </tr>
         <tr>
             <td><code><a href="https://github.com/waterfall-mkt/curta-golf/blob/1449e59227a30ca720c04785339406515a0a2fea/src/utils/PurityChecker.sol">PurityChecker</a></code></td>
