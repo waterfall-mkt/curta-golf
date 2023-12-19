@@ -74,6 +74,34 @@ forge coverage --report lcov
 > [!NOTE]
 > It may be helpful to use an extension like [**Coverage Gutters**](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters) to display the coverage over the code.
 
+## Deploying
+
+There are three core contracts that get deployed in [`Deploy.s.sol`](https://github.com/waterfall-mkt/curta-golf/blob/main/script/Deploy.s.sol): `PurityChecker.sol`, `Par.sol`, and `CurtaGolf.sol`. We also make use of three external libraries included in [`foundry.toml`](https://github.com/waterfall-mkt/curta-golf/blob/main/foundry.toml#L16-L20C2). These are: `Perlin.sol`, `ParArt.sol`, and `KingArt.sol`. `Perlin.sol` is used by `KingArt.sol`, which is used by `KingERC721.sol`, which is inherited by `CurtaGolf.sol`, and `ParArt.sol` is used by `Par.sol`. We include these in `foundry.toml` if we *don't* want them to be deployed alongside the contracts that use them. Otherwise, as an example, `Perlin.sol` and `KingArt.sol` would be deployed alongside `CurtaGolf.sol`.
+
+A standard example for deploying everything would look like this:
+```sh
+forge script script/Deploy.s.sol:Deploy \
+--rpc-url <rpc_url> \
+--sender <sender> \
+--account <account> \
+--broadcast
+```
+
+If libraries have already been deployed we would do:
+```sh
+forge script script/Deploy.s.sol:Deploy \
+--rpc-url <rpc_url> \
+--sender <sender> \
+--account <account> \
+--broadcast \
+--libraries src/utils/Perlin.sol:Perlin:<address> \
+--libraries src/utils/metadata/KingArt.sol:KingArt:<address> \
+--libraries src/utils/metadata/ParArt.sol:ParArt:<address>
+```
+
+> [!NOTE]
+> When using `forge verify-contract` to verify a contract on a contract with libraries, the `--libraries` arg needs to be supplied in the form `--libraries <remapped path to lib>:<library name>:<address>`.
+
 ## Acknowledgements
 * [**Optimizor Club**](https://github.com/OptimizorClub/optimizor)
 * [**axic/puretea**](https://github.com/axic/puretea/)

@@ -11,6 +11,15 @@ remappings = [
     'solmate/=lib/solmate/src/',
 ]
 
+# These external libraries have already been so we reference them this way
+# They would otherwise be deployed again via the contracts that use them.
+libraries = [
+    "src/utils/Perlin.sol:Perlin:0x5499e963931d359553380bCA52077ecB0E2419d6",
+    "src/utils/metadata/KingArt.sol:KingArt:0xcD1842728b73611445c87801889CAE24CF5502c6",
+    "src/utils/metadata/ParArt.sol:ParArt:0xBc475ce743B5C331A62d55Ce19A83De47d978e1C"
+]
+
+
 [fmt]
 line_length = 100
 tab_width = 4
