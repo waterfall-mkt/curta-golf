@@ -27,7 +27,7 @@ The goal of players is to view [**Courses**](https://github.com/waterfall-mkt/cu
         </tr>
         <tr>
             <td><code><a href="https://github.com/waterfall-mkt/curta-golf/blob/1449e59227a30ca720c04785339406515a0a2fea/src/Par.sol">Par</a></code></td>
-            <td><code><a href="https://basescan.org/address/ 0x6B780314f95452E37D88A2F950Bbd3885851fD10"> 0x6B780314f95452E37D88A2F950Bbd3885851fD10</code></td>
+            <td><code><a href="https://basescan.org/address/0x6B780314f95452E37D88A2F950Bbd3885851fD10">0x6B780314f95452E37D88A2F950Bbd3885851fD10</code></td>
         </tr>
         <tr>
             <td><code><a href="https://github.com/waterfall-mkt/curta-golf/blob/1449e59227a30ca720c04785339406515a0a2fea/src/utils/PurityChecker.sol">PurityChecker</a></code></td>
@@ -76,7 +76,7 @@ forge coverage --report lcov
 
 ## Deploying
 
-There are three core contracts that get deployed in [`Deploy.s.sol`](https://github.com/waterfall-mkt/curta-golf/blob/main/script/Deploy.s.sol): `PurityChecker.sol`, `Par.sol`, and `CurtaGolf.sol`. We also make use of three external libraries included in [`foundry.toml`](https://github.com/waterfall-mkt/curta-golf/blob/main/foundry.toml#L16-L20C2). These are: `Perlin.sol`, `ParArt.sol`, and `KingArt.sol`. `Perlin.sol` is used by `KingArt.sol`, which is used by `KingERC721.sol`, which is inherited by `CurtaGolf.sol`, and `ParArt.sol` is used by `Par.sol`. We include these in `foundry.toml` if we *don't* want them to be deployed alongside the contracts that use them. Otherwise, as an example, `Perlin.sol` and `KingArt.sol` would be deployed alongside `CurtaGolf.sol`.
+There are three core contracts that get deployed in [`Deploy.s.sol`](https://github.com/waterfall-mkt/curta-golf/blob/main/script/Deploy.s.sol): `PurityChecker.sol`, `Par.sol`, and `CurtaGolf.sol`. We also make use of three external libraries. These are: `Perlin.sol`, `ParArt.sol`, and `KingArt.sol`. `Perlin.sol` is used by `KingArt.sol`, which is used by `KingERC721.sol`, which is inherited by `CurtaGolf.sol`, and `ParArt.sol` is used by `Par.sol`. We include these in `foundry.toml` if we *don't* want them to be deployed alongside the contracts that use them. Otherwise, as an example, `Perlin.sol` and `KingArt.sol` would be deployed alongside `CurtaGolf.sol`.
 
 A standard example for deploying everything would look like this:
 ```sh
