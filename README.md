@@ -76,7 +76,7 @@ forge coverage --report lcov
 
 ## Deploying
 
-There are three core contracts that get deployed in [`Deploy.s.sol`](https://github.com/waterfall-mkt/curta-golf/blob/main/script/Deploy.s.sol): `PurityChecker.sol`, `Par.sol`, and `CurtaGolf.sol`. We also make use of three external libraries included in [`foundry.toml`](https://github.com/waterfall-mkt/curta-golf/blob/main/foundry.toml#L8). These are: `Perlin.sol`, `ParArt.sol`, and `KingArt.sol`. `Perlin.sol` is used by `KingArt.sol` which is used by `KingERC721.sol` which is inherited by `CurtaGolf.sol` while `ParArt.sol` is used by `Par.sol`. We include these in `foundry.toml` if we *don't* want them to be deployed alongside the contracts that use them. Otherwise, as an example, `Perlin.sol` and `KingArt.sol` would be deployed alongside `CurtaGolf.sol`.
+There are three core contracts that get deployed in [`Deploy.s.sol`](https://github.com/waterfall-mkt/curta-golf/blob/main/script/Deploy.s.sol): `PurityChecker.sol`, `Par.sol`, and `CurtaGolf.sol`. We also make use of three external libraries included in [`foundry.toml`](https://github.com/waterfall-mkt/curta-golf/blob/main/foundry.toml#L16-L20C2). These are: `Perlin.sol`, `ParArt.sol`, and `KingArt.sol`. `Perlin.sol` is used by `KingArt.sol`, which is used by `KingERC721.sol`, which is inherited by `CurtaGolf.sol`, and `ParArt.sol` is used by `Par.sol`. We include these in `foundry.toml` if we *don't* want them to be deployed alongside the contracts that use them. Otherwise, as an example, `Perlin.sol` and `KingArt.sol` would be deployed alongside `CurtaGolf.sol`.
 
 A standard example for deploying everything would look like this:
 ```sh
