@@ -99,7 +99,8 @@ forge script script/Deploy.s.sol:Deploy \
 --libraries src/utils/metadata/ParArt.sol:ParArt:<address>
 ```
 
-When using `forge verify-contract` on a contract with libraries, the `--libaries` arg needs to be supplied in the form `--libraries <remapped path to lib>:<library name>:<address>` to the verify command.
+> [!NOTE]
+> When using `forge verify-contract` to verify a contract on a contract with libraries, the `--libraries` arg needs to be supplied in the form `--libraries <remapped path to lib>:<library name>:<address>`.
 
 ## Acknowledgements
 * [**Optimizor Club**](https://github.com/OptimizorClub/optimizor)
