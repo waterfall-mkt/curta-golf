@@ -9,7 +9,6 @@ import { Par } from "src/Par.sol";
 import { PurityChecker } from "src/utils/PurityChecker.sol";
 
 contract Deploy is Script {
-
     // -------------------------------------------------------------------------
     // Deployment addresses
     // -------------------------------------------------------------------------

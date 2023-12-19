@@ -112,10 +112,7 @@ abstract contract KingERC721 {
         }
 
         // Set new owner.
-        _tokenData[_id] = TokenData({
-            owner: _to,
-            metadata: uint96(uint160(_to) >> 64)
-        });
+        _tokenData[_id] = TokenData({ owner: _to, metadata: uint96(uint160(_to) >> 64) });
 
         // Clear previous approval data for the token.
         delete getApproved[_id];
@@ -136,10 +133,7 @@ abstract contract KingERC721 {
         }
 
         // Set new owner
-        _tokenData[_id] = TokenData({
-            owner: _to,
-            metadata: uint96(uint160(_to) >> 64)
-        });
+        _tokenData[_id] = TokenData({ owner: _to, metadata: uint96(uint160(_to) >> 64) });
 
         // Emit event.
         emit Transfer(address(0), _to, _id);
