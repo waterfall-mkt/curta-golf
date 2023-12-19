@@ -36,7 +36,9 @@ contract PurityChecker is IPurityChecker {
                 // Always increments the offset by at least 1.
                 // If an opcode is a PUSH1-PUSH32 opcode (byte ∈ [0x60, 0x80)) the resulting value
                 // after subtracting 0x60 will be a valid index ∈ [0, 32). This is then indexed into
-                // a byte array representing the push bytes of the opcodes (1-32).
+                // a byte array representing the push bytes of the opcodes (1-32). Bytes outside of
+                // that range will result in an index larger than 31, which for `BYTE(n, x)` always
+                // returns 0.
                 offset :=
                     add(
                         add(offset, 1),
