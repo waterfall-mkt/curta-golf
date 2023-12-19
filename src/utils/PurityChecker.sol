@@ -16,7 +16,7 @@ contract PurityChecker is IPurityChecker {
         override
         returns (bool isPure)
     {
-        assembly {
+        assembly ("memory-safe") {
             // Code is pure by default unless disallowed byte is found.
             isPure := 1
 
@@ -27,7 +27,7 @@ contract PurityChecker is IPurityChecker {
             // `end` is the memory position where the bytecode ends.
             let end := add(offset, mload(_code))
 
-            for { let ptr := offset } lt(offset, end) { } {
+            for { } lt(offset, end) { } {
                 let opcode := byte(0, mload(offset))
 
                 // Set `isPure` to 0 if any indexed bit in the loop was ever 0.
