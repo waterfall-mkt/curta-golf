@@ -12,11 +12,19 @@ import { BaseTest } from "test/utils/BaseTest.sol";
 /// tokens, as outputted by {KingArt}.
 /// @dev Must be compiled with `--via-ir` to avoid stack too deep errors.
 contract PrintKingArtScript is BaseTest, Script {
+    // -------------------------------------------------------------------------
+    // Constants
+    // -------------------------------------------------------------------------
+
+    /// @notice The address of the recipient of the solution.
+    address constant RECIPIENT = 0xA85572Cd96f1643458f17340b6f0D6549Af482F5;
+
     function setUp() public override {
         super.setUp();
 
         // Submit a solution to course #1 as `fiveoutofnine.eth`.
-        curtaGolf.submitDirectly(1, EFFICIENT_SOLUTION, 0xA85572Cd96f1643458f17340b6f0D6549Af482F5);
+        curtaGolf.commit(keccak256(abi.encode(RECIPIENT, EFFICIENT_SOLUTION, 0)));
+        curtaGolf.submit(1, EFFICIENT_SOLUTION, RECIPIENT, 0);
     }
     // -------------------------------------------------------------------------
     // `run`
