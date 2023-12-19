@@ -16,44 +16,36 @@ contract PurityChecker is IPurityChecker {
         override
         returns (bool isPure)
     {
-        assembly ("memory-safe") {
-            function perform(code, bitmap) -> ret {
-                // `offset` is the memory position where the bytecode starts; we
-                // add `0x20` to skip the portion that stores the length of the
-                // bytecode.
-                let offset := add(code, 0x20)
-                // `end` is the memory position where the bytecode ends.
-                let end := add(offset, mload(code))
+        assembly {
+            // Code is pure by default unless disallowed byte is found.
+            isPure := 1
 
-                // Iterate through the opcodes in the bytecode until we reach
-                // the end. For each byte that is an opcode (i.e. not data
-                // pushed onto the stack via the `PUSH` opcodes), we break the
-                // loop early if it is not allowed (i.e. the corresponding LSb
-                // bit in `_allowedOpcodes` is `0`). Since `ret` is set to `0`,
-                // or `false`, by default, this correctly results in `check`
-                // returning `false` if the contract is not pure.
-                for { let i := offset } lt(offset, end) { offset := add(offset, 1) } {
-                    let opcode := byte(0, mload(offset))
-                    // If the opcode is not allowed, the contract is not pure.
-                    if iszero(and(shr(opcode, bitmap), 1)) { leave }
-                    // `0xffffffff000000000000000000000000` is a bitmap where
-                    // LSb bits `[0x5f + 1, 0x7f]` are 1, i.e. the `PUSH1`, ...,
-                    // `PUSH32`, opcodes. We want to skip the number of bytes
-                    // pushed onto the stack because they are arbitrary data,
-                    // and we should not apply the purity check to them.
-                    if and(shr(opcode, 0xffffffff000000000000000000000000), 1) {
-                        // `opcode - 0x5f` is the number of bytes pushed onto
-                        // the stack.
-                        offset := add(offset, sub(opcode, 0x5f))
-                    }
-                }
+            // `offset` is the memory position where the bytecode starts; we
+            // add `0x20` to skip the portion that stores the length of the
+            // bytecode.
+            let offset := add(_code, 0x20)
+            // `end` is the memory position where the bytecode ends.
+            let end := add(offset, mload(_code))
 
-                // If we reached the end of the bytecode, the contract is pure,
-                // so return `true`.
-                ret := 1
+            for { let ptr := offset } lt(offset, end) { } {
+                let opcode := byte(0, mload(offset))
+
+                // Set `isPure` to 0 if any indexed bit in the loop was ever 0.
+                isPure := and(isPure, shr(opcode, _allowedOpcodes))
+
+                // Always increments the offset by at least 1.
+                // If an opcode is a PUSH1-PUSH32 opcode (byte ∈ [0x60, 0x80)) the resulting value
+                // after subtracting 0x60 will be a valid index ∈ [0, 32). This is then indexed into
+                // a byte array representing the push bytes of the opcodes (1-32).
+                offset :=
+                    add(
+                        add(offset, 1),
+                        byte(
+                            sub(opcode, 0x60),
+                            0x0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20
+                        )
+                    )
             }
-
-            isPure := perform(_code, _allowedOpcodes)
         }
     }
 }
