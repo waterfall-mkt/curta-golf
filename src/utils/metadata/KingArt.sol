@@ -159,8 +159,7 @@ library KingArt {
         '="18" r="4"/><rect x="12" y="24" width="8" height="12" rx="4"/><circle'
         ' cx="28" cy="4" r="4"/><rect x="24" y="10" width="8" height="26" rx="4'
         '"/></g><text x="172" y="120"><tspan class="a">Curta</tspan><tspan clas'
-        's="b"> | Golf</tspan></text><g transform="matrix(5.12 0 0 5.12 192 228'
-        '.96)">';
+        's="b"> | Golf</tspan></text><g transform="matrix(5.12 0 0 5.12 192 228' '.96)">';
 
     /// @notice Starting string for the island's SVG.
     /// @dev The island's SVG's width and height are computed to perfectly
@@ -328,19 +327,17 @@ library KingArt {
             '</div><div class="c">King</div></div></div><div class="a d"><svg x'
             'mlns="http://www.w3.org/2000/svg" width="40" height="48" viewBox="'
             '0 0 24 24" fill="none"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4'
-            ' 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 '
+            " 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 "
             '4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><pat'
             'h d="m9 12 2 2 4-4"/></svg><div class="a e"><div class="b">',
             _formatNumber(_solves),
             '</div><div class="c">Solves</div></div></div><div class="a d"><svg'
             ' xmlns="http://www.w3.org/2000/svg" width="40" height="48" viewBox'
             '="0 0 24 24" fill="none"><path d="M3 22h12M4 9h10m0 13V4a2 2 0 0 0'
-            '-2-2H6a2 2 0 0 0-2 2v18m10-9h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2h0a2 2'
-            ' 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42L18 5"/></svg><div class="a e"><'
-            'div class="b">',
+            "-2-2H6a2 2 0 0 0-2 2v18m10-9h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2h0a2 2"
+            ' 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42L18 5"/></svg><div class="a e"><' 'div class="b">',
             _formatNumber(_gasUsed),
-            '</div><div class="c">Gas used</div></div></div></div></foreignObje'
-            'ct></svg>'
+            '</div><div class="c">Gas used</div></div></div></div></foreignObje' "ct></svg>"
         );
     }
 
