@@ -114,14 +114,6 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
         return _submit(_courseId, _solution, _recipient);
     }
 
-    /// @inheritdoc ICurtaGolf
-    function submitDirectly(uint32 _courseId, bytes memory _solution, address _recipient)
-        external
-        returns (uint32)
-    {
-        return _submit(_courseId, _solution, _recipient);
-    }
-
     // -------------------------------------------------------------------------
     // `owner`-only functions
     // -------------------------------------------------------------------------

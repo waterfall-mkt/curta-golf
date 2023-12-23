@@ -285,135 +285,6 @@ contract CurtaGolfTest is BaseTest {
     }
 
     // -------------------------------------------------------------------------
-    // `submitDirectly`
-    // -------------------------------------------------------------------------
-
-    /// @notice Test the emitted events and storage updates upon submitting
-    /// solutions in the following order:
-    ///     1. `solver1` submits an inefficient solution but becomes the king.
-    ///     2. `solver2` submits an efficient solution and becomes the new king.
-    ///     3. `solver3` submits an inefficient solution and doesn't become the
-    ///         new king.
-    /// All solvers get `par` NFTs minted to them, but only `solver1` and
-    /// `solver3` hold ownership of a King NFT.
-    function test_submitDirectly() public {
-        // Check that there is no King for course 1.
-        {
-            (, uint32 gasUsed, uint32 solutionCount, uint32 kingCount) = curtaGolf.getCourse(1);
-            assertEq(gasUsed, 0);
-            assertEq(solutionCount, 0);
-            assertEq(kingCount, 0);
-            vm.expectRevert("NOT_MINTED");
-            curtaGolf.ownerOf(1);
-        }
-        // Check that all solvers have 0 King NFTs.
-        {
-            assertEq(curtaGolf.balanceOf(solver1), 0);
-            assertEq(curtaGolf.balanceOf(solver2), 0);
-            assertEq(curtaGolf.balanceOf(solver3), 0);
-        }
-        // Check that all solvers have 0 Par NFTs.
-        {
-            assertEq(par.balanceOf(solver1), 0);
-            assertEq(par.balanceOf(solver2), 0);
-            assertEq(par.balanceOf(solver3), 0);
-        }
-
-        // Submit the inefficient solution as `solver1`.
-        vm.prank(solver1);
-        vm.expectEmit(true, true, true, true);
-        emit Transfer(address(0), solver1, 1);
-        vm.expectEmit(true, true, false, false);
-        emit UpdateKing(1, solver1, 0);
-        vm.expectEmit(true, true, true, true);
-        emit Transfer(address(0), solver1, (1 << 160) | uint256(uint160(solver1)));
-        vm.expectEmit(true, true, false, false);
-        emit SubmitSolution(1, solver1, address(0), 0);
-        curtaGolf.submitDirectly(1, INEFFICIENT_SOLUTION, solver1);
-
-        // Check that there is 1 King and 1 solution for course 1.
-        {
-            (,, uint32 solutionCount, uint32 kingCount) = curtaGolf.getCourse(1);
-            assertEq(solutionCount, 1);
-            assertEq(kingCount, 1);
-            assertEq(curtaGolf.ownerOf(1), solver1);
-        }
-        // Check that `solver1` has 1 King NFT, and the others have 0.
-        {
-            assertEq(curtaGolf.balanceOf(solver1), 1);
-            assertEq(curtaGolf.balanceOf(solver2), 0);
-            assertEq(curtaGolf.balanceOf(solver3), 0);
-        }
-        // Check that `solver1` has 1 Par NFT, and the others have 0.
-        {
-            assertEq(par.balanceOf(solver1), 1);
-            assertEq(par.balanceOf(solver2), 0);
-            assertEq(par.balanceOf(solver3), 0);
-        }
-
-        // Submit the efficient solution as `solver2`.
-        vm.prank(solver2);
-        vm.expectEmit(true, true, true, true);
-        emit Transfer(solver1, solver2, 1);
-        vm.expectEmit(true, true, false, false);
-        emit UpdateKing(1, solver2, 0);
-        vm.expectEmit(true, true, true, true);
-        emit Transfer(address(0), solver2, (1 << 160) | uint256(uint160(solver2)));
-        vm.expectEmit(true, true, false, false);
-        emit SubmitSolution(1, solver2, address(0), 0);
-        curtaGolf.submitDirectly(1, EFFICIENT_SOLUTION, solver2);
-
-        // Check that there is 2 Kings and 2 solutions for course 1.
-        {
-            (,, uint32 solutionCount, uint32 kingCount) = curtaGolf.getCourse(1);
-            assertEq(solutionCount, 2);
-            assertEq(kingCount, 2);
-            assertEq(curtaGolf.ownerOf(1), solver2);
-        }
-        // Check that `solver2` has 1 King NFT, and the others have 0.
-        {
-            assertEq(curtaGolf.balanceOf(solver1), 0);
-            assertEq(curtaGolf.balanceOf(solver2), 1);
-            assertEq(curtaGolf.balanceOf(solver3), 0);
-        }
-        // Check that `solver1` and `solver2` have 1 Par NFT each, and `solver3`
-        // has 0.
-        {
-            assertEq(par.balanceOf(solver1), 1);
-            assertEq(par.balanceOf(solver2), 1);
-            assertEq(par.balanceOf(solver3), 0);
-        }
-
-        // Submit the efficient solution as `solver3`.
-        vm.prank(solver3);
-        vm.expectEmit(true, true, true, true);
-        emit Transfer(address(0), solver3, (1 << 160) | uint256(uint160(solver3)));
-        vm.expectEmit(true, true, false, false);
-        emit SubmitSolution(1, solver3, address(0), 0);
-        curtaGolf.submitDirectly(1, INEFFICIENT_SOLUTION, solver3);
-
-        // Check that there is 2 Kings and 3 solutions for course 1.
-        {
-            (,, uint32 solutionCount, uint32 kingCount) = curtaGolf.getCourse(1);
-            assertEq(solutionCount, 3);
-            assertEq(kingCount, 2);
-            assertEq(curtaGolf.ownerOf(1), solver2);
-        }
-        // Check that `solver2` has 1 King NFT, and the others have 0.
-        {
-            assertEq(curtaGolf.balanceOf(solver1), 0);
-            assertEq(curtaGolf.balanceOf(solver2), 1);
-            assertEq(curtaGolf.balanceOf(solver3), 0);
-        }
-        // Check each solver has 1 Par NFT each.
-        {
-            assertEq(par.balanceOf(solver1), 1);
-            assertEq(par.balanceOf(solver2), 1);
-            assertEq(par.balanceOf(solver3), 1);
-        }
-    }
-
-    // -------------------------------------------------------------------------
     // `addCourse`
     // -------------------------------------------------------------------------
 
@@ -547,7 +418,10 @@ contract CurtaGolfTest is BaseTest {
 
     /// @notice Test that calling `tokenURI` on a minted token succeeds.
     function test_tokenURI_MintedToken_Succeeds() public {
-        curtaGolf.submitDirectly(1, EFFICIENT_SOLUTION, solver1);
+        curtaGolf.commit(keccak256(abi.encode(solver1, EFFICIENT_SOLUTION, 0)));
+        vm.warp(MIN_COMMIT_AGE + 1);
+        vm.prank(solver1);
+        curtaGolf.submit(1, EFFICIENT_SOLUTION, solver1, 0);
         curtaGolf.tokenURI(1);
     }
 }
