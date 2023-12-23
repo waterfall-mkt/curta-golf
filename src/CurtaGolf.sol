@@ -191,13 +191,18 @@ contract CurtaGolf is ICurtaGolf, KingERC721, Owned {
         // Revert if the course does not exist.
         if (address(courseData.course) == address(0)) revert CourseDoesNotExist(_courseId);
 
+        // Revert if the initcode contains invalid opcodes.
+        if (!purityChecker.check(_solution, getAllowedOpcodes[_courseId])) {
+            revert PollutedSolution();
+        }
+
         // Deploy the solution.
         address target;
         assembly {
             target := create(0, add(_solution, 0x20), mload(_solution))
         }
 
-        // Revert if the solution contains invalid opcodes.
+        // Revert if the runtime contains invalid opcodes.
         if (!purityChecker.check(target.code, getAllowedOpcodes[_courseId])) {
             revert PollutedSolution();
         }
