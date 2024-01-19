@@ -21,7 +21,8 @@ contract PrintParArtScript is BaseTest, Script {
         super.setUp();
 
         // Submit a solution to course #1 as `RECIPIENT`.
-        curtaGolf.submitDirectly(1, EFFICIENT_SOLUTION, RECIPIENT);
+        curtaGolf.commit(keccak256(abi.encode(RECIPIENT, EFFICIENT_SOLUTION, 0)));
+        curtaGolf.submit(1, EFFICIENT_SOLUTION, RECIPIENT, 0);
     }
     // -------------------------------------------------------------------------
     // `run`
