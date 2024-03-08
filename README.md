@@ -15,23 +15,39 @@ The goal of players is to view [**Courses**](https://github.com/waterfall-mkt/cu
             <th>Chain</th>
             <th>Chain ID</th>
             <th>Contract</th>
-            <th>Deploy</th>
+            <th>v0.0.1</th>
+            <th>v0.0.2</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td rowspan="3">Base</td>
-            <td rowspan="3">8453</td>
-            <td><code><a href="https://github.com/waterfall-mkt/curta-golf/blob/1449e59227a30ca720c04785339406515a0a2fea/src/CurtaGolf.sol">CurtaGolf</a></code></td>
+            <td rowspan="6">Base</td>
+            <td rowspan="6">8453</td>
+            <td><code><a href="https://github.com/waterfall-mkt/curta-golf/blob/main/src/CurtaGolf.sol">CurtaGolf</a></code></td>
             <td><code><a href="https://basescan.org/address/0xb8d97B24935C70cD931bbc6150e2596570997cE9">0xb8d97B24935C70cD931bbc6150e2596570997cE9</code></td>
+            <td><code><a href="https://basescan.org/address/0x8ccd70b1b74ea505dba39d2d11c3ab6a2cb14a8c">0x8ccd70b1b74ea505dba39d2d11c3ab6a2cb14a8c</code></td>
         </tr>
         <tr>
-            <td><code><a href="https://github.com/waterfall-mkt/curta-golf/blob/1449e59227a30ca720c04785339406515a0a2fea/src/Par.sol">Par</a></code></td>
+            <td><code><a href="https://github.com/waterfall-mkt/curta-golf/blob/main/src/Par.sol">Par</a></code></td>
             <td><code><a href="https://basescan.org/address/0x6B780314f95452E37D88A2F950Bbd3885851fD10">0x6B780314f95452E37D88A2F950Bbd3885851fD10</code></td>
+            <td><code><a href="https://basescan.org/address/0xde26c7d0a4ae6956bfb893c80c4418d84e389aca">0xde26c7d0a4ae6956bfb893c80c4418d84e389aca</code></td>
         </tr>
         <tr>
-            <td><code><a href="https://github.com/waterfall-mkt/curta-golf/blob/1449e59227a30ca720c04785339406515a0a2fea/src/utils/PurityChecker.sol">PurityChecker</a></code></td>
+            <td><code><a href="https://github.com/waterfall-mkt/curta-golf/blob/main/src/utils/PurityChecker.sol">PurityChecker</a></code></td>
             <td><code><a href="https://basescan.org/address/0xE03Bbdb59444581f54f6823F0091FdF738E3Ce62">0xE03Bbdb59444581f54f6823F0091FdF738E3Ce62</code></td>
+            <td><code><a href="https://basescan.org/address/0xb2eb169f5f957adf0d78fa7897f72c9be70c56e4">0xb2eb169f5f957adf0d78fa7897f72c9be70c56e4</code></td>
+        </tr>
+        <tr>
+            <td><code><a href="https://github.com/waterfall-mkt/curta-golf/blob/main/src/utils/metadata/KingArt.sol">KingArt</a></code></td>
+            <td colspan="2" style="text-align:center"><code><a href="https://basescan.org/address/0xcD1842728b73611445c87801889CAE24CF5502c6">0xcD1842728b73611445c87801889CAE24CF5502c6</code></td>
+        </tr>
+        <tr>
+            <td><code><a href="https://github.com/waterfall-mkt/curta-golf/blob/main/src/utils/metadata/ParArt.sol">ParArt</a></code></td>
+            <td colspan="2" style="text-align:center"><code><a href="https://basescan.org/address/0xBc475ce743B5C331A62d55Ce19A83De47d978e1C">0xBc475ce743B5C331A62d55Ce19A83De47d978e1C</code></td>
+        </tr>
+        <tr>
+            <td><code><a href="https://github.com/waterfall-mkt/curta-golf/blob/main/src/utils/Perlin.sol">Perlin</a></code></td>
+            <td colspan="2" style="text-align:center"><code><a href="https://basescan.org/address/0x5499e963931d359553380bCA52077ecB0E2419d6">0x5499e963931d359553380bCA52077ecB0E2419d6</code></td>        
         </tr>
     </tbody>
 <table>
